@@ -1,5 +1,6 @@
-import React, {ReactNode} from "react";
+import React from "react";
 import styled, {css} from "styled-components";
+import {pxToRem} from "../../helpers";
 
 export enum ButtonAppearance {
     Light,
@@ -20,11 +21,11 @@ const Button: React.FC<ButtonProps> = ({label, callback, appearance}) => {
 };
 
 const Container = styled.button<Pick<ButtonProps, "appearance">>`
-  font-size: 18px;
-  border: 0;
+  font-size: ${pxToRem(18)};
+  border: none;
   cursor: pointer;
-  border-radius: 0.25rem;
-  line-height: 34px;
+  border-radius: ${pxToRem(4)};
+  line-height: ${pxToRem(34)};
   text-align: center;
 
   ${({appearance}) => {

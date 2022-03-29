@@ -1,6 +1,7 @@
 import React, {useMemo} from "react";
 import styled from "styled-components";
 import Button, {ButtonAppearance, ButtonProps} from "../Button";
+import {pxToRem} from "../../helpers";
 
 const App = () => {
     const buttons: ButtonProps[] = useMemo(() => [
@@ -201,7 +202,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  grid-gap: 0.25rem;
+  grid-gap: ${pxToRem(4)};
 `;
 
 export default App;
