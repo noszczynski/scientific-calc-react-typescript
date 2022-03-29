@@ -2,10 +2,23 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
+import {CalculatorProvider} from "./providers/CalculatorProvider";
+import {createGlobalStyle, ThemeProvider} from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+  *, *::after, *::before {
+    box-sizing: border-box;
+  }
+`;
 
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <ThemeProvider theme={{}}>
+            <GlobalStyle/>
+            <CalculatorProvider>
+                <App/>
+            </CalculatorProvider>
+        </ThemeProvider>
     </React.StrictMode>,
     document.getElementById("root")
 );
