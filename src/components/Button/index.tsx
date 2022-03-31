@@ -1,23 +1,30 @@
 import React from "react";
-import styled, {css} from "styled-components";
-import {pxToRem} from "../../helpers";
+import styled, { css } from "styled-components";
+import { pxToRem } from "../../helpers";
+import { Operator } from "../../providers/CalculatorProvider";
 
 export enum ButtonAppearance {
-    Light,
-    Dark,
-    Special,
+  Light,
+  Dark,
+  Special,
 }
 
-export interface ButtonProps {
-    label: string | JSX.Element;
-
-    callback(): void;
-
-    appearance: ButtonAppearance;
+export interface OperatorButton {
+  operator: Operator;
+  label: string | Operator | JSX.Element;
+  appearance: ButtonAppearance;
 }
 
-const Button: React.FC<ButtonProps> = ({label, callback, appearance}) => {
-    return <Container appearance={appearance} onClick={callback}>{label}</Container>;
+export interface ButtonProps extends OperatorButton {
+  onClick(): void;
+}
+
+const Button: React.FC<ButtonProps> = ({ onClick, label, appearance }) => {
+  return (
+    <Container appearance={appearance} onClick={onClick}>
+      {label}
+    </Container>
+  );
 };
 
 const Container = styled.button<Pick<ButtonProps, "appearance">>`
@@ -28,27 +35,27 @@ const Container = styled.button<Pick<ButtonProps, "appearance">>`
   line-height: ${pxToRem(34)};
   text-align: center;
 
-  ${({appearance}) => {
-        switch (appearance) {
-        case ButtonAppearance.Light:
-            return css`
+  ${({ appearance }) => {
+    switch (appearance) {
+      case ButtonAppearance.Light:
+        return css`
           background-color: #5f6368;
-          color: #ffffff; 
+          color: #ffffff;
         `;
-        case ButtonAppearance.Dark:
-            return css`
+      case ButtonAppearance.Dark:
+        return css`
           background-color: #3c4043;
-          color: #ffffff; 
+          color: #ffffff;
         `;
-        case ButtonAppearance.Special:
-            return css`
+      case ButtonAppearance.Special:
+        return css`
           background-color: #8ab4f8;
           color: #202124;
         `;
-        default:
-            throw Error("Unexpected ButtonAppearance");
-        }
-    }};
+      default:
+        throw Error("Unexpected ButtonAppearance");
+    }
+  }};
 `;
 
 export default Button;

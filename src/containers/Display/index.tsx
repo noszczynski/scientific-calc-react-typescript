@@ -1,24 +1,24 @@
 import React from "react";
 import styled from "styled-components";
-import {pxToRem} from "../../helpers";
-import {useCalculator} from "../../hooks/useCalendar";
+import { pxToRem } from "../../helpers";
+import { useCalculator } from "../../hooks/useCalendar";
 
 type DisplayProps = {
-    //
-}
+  //
+};
 
 const Display: React.FC<DisplayProps> = () => {
-    const {displayValue} = useCalculator();
+  const { displayValue } = useCalculator();
 
-    return (
-        <Container>
-            <Bar>
-                <button>back</button>
-                <span>Ans = 0</span>
-            </Bar>
-            <Value>{displayValue}</Value>
-        </Container>
-    );
+  return (
+    <Container>
+      <Bar>
+        <button>back</button>
+        <span>Ans = 0</span>
+      </Bar>
+      <Value>{displayValue}</Value>
+    </Container>
+  );
 };
 
 const Container = styled.div`
