@@ -9,6 +9,18 @@ const GlobalStyle = createGlobalStyle`
   *, *::after, *::before {
     box-sizing: border-box;
   }
+  
+  body {
+    background-color: #202124;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+  }
+  
+  button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
 `;
 
 ReactDOM.render(

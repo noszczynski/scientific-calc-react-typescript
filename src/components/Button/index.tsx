@@ -15,13 +15,19 @@ export interface OperatorButton {
   appearance: ButtonAppearance;
 }
 
-export interface ButtonProps extends OperatorButton {
+export interface ButtonProps extends Partial<OperatorButton> {
   onClick(): void;
+  disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ onClick, label, appearance }) => {
+const Button: React.FC<ButtonProps> = ({
+  onClick,
+  label,
+  disabled,
+  appearance,
+}) => {
   return (
-    <Container appearance={appearance} onClick={onClick}>
+    <Container appearance={appearance} disabled={disabled} onClick={onClick}>
       {label}
     </Container>
   );
@@ -41,21 +47,37 @@ const Container = styled.button<Pick<ButtonProps, "appearance">>`
         return css`
           background-color: #5f6368;
           color: #ffffff;
+
+          &:hover {
+            background-color: #70757a;
+          }
         `;
       case ButtonAppearance.Dark:
         return css`
           background-color: #3c4043;
           color: #ffffff;
+
+          &:hover {
+            background-color: #424548;
+          }
         `;
       case ButtonAppearance.Special:
         return css`
           background-color: #8ab4f8;
           color: #202124;
+
+          &:hover {
+            background-color: #aecbfa;
+          }
         `;
       default:
-        throw Error("Unexpected ButtonAppearance");
+        throw Error(`Unexpected ButtonAppearance: ${appearance}`);
     }
   }};
+
+  &:disabled {
+    background-color: red;
+  }
 `;
 
 export default Button;

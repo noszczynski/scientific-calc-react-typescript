@@ -1,18 +1,7 @@
-import React from "react";
 import { ButtonAppearance, OperatorButton } from "../../components/Button";
 import { Operator } from "../../providers/CalculatorProvider";
 
 const buttons: OperatorButton[] = [
-  {
-    label: "Rad",
-    operator: Operator.Radian,
-    appearance: ButtonAppearance.Light,
-  },
-  {
-    label: "Deg",
-    operator: Operator.Deg,
-    appearance: ButtonAppearance.Light,
-  },
   {
     label: "x!",
     operator: Operator.Factorial,
@@ -85,7 +74,7 @@ const buttons: OperatorButton[] = [
   },
   {
     label: "log",
-    operator: Operator.Log,
+    operator: Operator.Logarithm,
     appearance: ButtonAppearance.Light,
   },
   {
@@ -105,12 +94,12 @@ const buttons: OperatorButton[] = [
   },
   {
     label: "×",
-    operator: Operator.X,
+    operator: Operator.Multiplier,
     appearance: ButtonAppearance.Light,
   },
   {
     label: "e",
-    operator: Operator.E,
+    operator: Operator.Exponent,
     appearance: ButtonAppearance.Light,
   },
   {

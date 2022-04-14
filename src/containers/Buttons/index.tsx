@@ -4,28 +4,28 @@ import styled from "styled-components";
 import { pxToRem } from "../../helpers";
 import { Operator } from "../../providers/CalculatorProvider";
 import buttons from "../../constants/buttons";
-import { useCalculator } from "../../hooks/useCalendar";
+import { useCalculator } from "../../hooks/useCalculator";
+import { RadianDegreesSwitch } from "../../components/RadianDegreesSwitch";
 
 type ButtonsProps = {
   //
 };
 
 const Buttons: React.FC<ButtonsProps> = () => {
-  const { addOperation } = useCalculator();
+  const { addOperation, can } = useCalculator();
 
   const callback = useCallback(
-    (operator: Operator) => () => {
-      console.log(operator);
-      addOperation(operator);
-    },
-    []
+    (operator: Operator) => () => addOperation(operator),
+    [addOperation]
   );
 
   return (
     <Container>
+      <RadianDegreesSwitch />
       {buttons.map((button) => (
         <Button
           key={button.label.toString()}
+          disabled={!can.has(button.operator)}
           onClick={callback(button.operator)}
           {...button}
         />

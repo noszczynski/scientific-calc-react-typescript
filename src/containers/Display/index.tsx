@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { pxToRem } from "../../helpers";
-import { useCalculator } from "../../hooks/useCalendar";
+import { useCalculator } from "../../hooks/useCalculator";
 
 type DisplayProps = {
   //
@@ -33,6 +33,10 @@ const Container = styled.div`
   border-radius: ${pxToRem(8)};
   margin-inline: auto;
   padding: ${pxToRem(10)} ${pxToRem(14)} ${pxToRem(0)} ${pxToRem(10)};
+
+  &:hover {
+    background-color: #303134;
+  }
 `;
 
 const Bar = styled.span`
