@@ -52,6 +52,7 @@ export const initialProps: CalculatorProviderReturnProps = {
 };
 
 const DISPLAY_DEFAULT_VALUE = "0";
+const DISPLAY_DEFAULT_CHAR_LIMIT = 12;
 
 export const CalculatorContext =
   createContext<CalculatorProviderReturnProps>(initialProps);
@@ -72,8 +73,14 @@ export const CalculatorProvider: React.FC = ({ children }) => {
 
   const addToDisplay = useCallback((value: string | number) => {
     setDisplay((state) => {
-      if (state === DISPLAY_DEFAULT_VALUE && value !== ".") {
-        return `${value}`;
+      if (state === DISPLAY_DEFAULT_VALUE) {
+        if (value === "00") {
+          return DISPLAY_DEFAULT_VALUE;
+        }
+
+        if (value !== ".") {
+          return `${value}`;
+        }
       }
 
       return `${state}${value}`;
@@ -138,11 +145,32 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           equal();
           break;
         }
+        case Operator.DoubleZero: {
+          addToDisplay("00");
+          break;
+        }
+        case Operator.Backspace: {
+          setDisplay((state) => {
+            if (state.length >= 2) {
+              if (state.at(-2) === ".") {
+                return state.slice(0, -2);
+              }
+              return state.slice(0, -1);
+            }
+
+            if (state.length === 1) {
+              return DISPLAY_DEFAULT_VALUE;
+            }
+
+            return state;
+          });
+          break;
+        }
         default:
           throw Error("Error");
       }
     },
-    [clearCalculations, equal]
+    [addToDisplay, clearCalculations, equal]
   );
 
   const executeDigitOperation = useCallback(
@@ -204,7 +232,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     [activeOperator, display, eraseDisplay, getResultFromAction, memory]
   );
 
-  const addOperation = useCallback(
+  const clickUIButton = useCallback(
     (button: OperatorButton) => {
       switch (button.type) {
         case ButtonType.Calculator: {
@@ -226,6 +254,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
         default:
           throw Error(`Unexpected button type: ${button.type}`);
       }
+
       setHistory((state: History[]) => {
         const newState = _.cloneDeep(state);
         newState.push(button);
@@ -300,7 +329,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   const value: CalculatorProviderReturnProps = useMemo(
     () => ({
       display,
-      addOperation,
+      addOperation: clickUIButton,
       currentMode,
       handleSetCurrentMode,
       memory,
@@ -313,7 +342,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     [
       history,
       display,
-      addOperation,
+      clickUIButton,
       currentMode,
       handleSetCurrentMode,
       memory,
