@@ -20,8 +20,11 @@ export interface CalculatorProviderReturnProps {
   memory: Memory;
   activeOperator: ActiveOperator;
   history: History[];
+  isShiftPressed: boolean;
+  isShortcutsShown: boolean;
   handleSetCurrentMode(mode: Mode): void;
   addOperation(button: OperatorButton): void;
+  saveButtonRefs(refs: HTMLButtonElement[]): void;
 }
 
 export enum Mode {
@@ -35,11 +38,16 @@ export const initialProps: CalculatorProviderReturnProps = {
   memory: null,
   activeOperator: null,
   history: [],
+  isShiftPressed: false,
+  isShortcutsShown: false,
   handleSetCurrentMode: () => {
     throw Error("Function handleSetCurrentMode is used before initialize");
   },
   addOperation: () => {
     throw Error("Function addOperation is used before initialize");
+  },
+  saveButtonRefs: () => {
+    throw Error("Function setRefs is used before initialize");
   },
 };
 
@@ -54,6 +62,9 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   const [activeOperator, setActiveOperator] = useState<ActiveOperator>(null);
   const [history, setHistory] = useState<History[]>([]);
   const [currentMode, setCurrentMode] = useState<Mode>(Mode.Rad);
+  const [isShiftPressed, setIsShiftPressed] = useState<boolean>(false);
+  const [isShortcutsShown, setIsShortcutsShown] = useState<boolean>(true);
+  const [refs, setRefs] = useState<HTMLButtonElement[]>([]);
 
   const handleSetCurrentMode = useCallback((mode: Mode) => {
     setCurrentMode(mode);
@@ -104,21 +115,17 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     []
   );
 
-  const equal = useCallback(
-    ({ operator }: OperatorButton) => {
-      if (!activeOperator) {
-        throw Error("No active operator");
-      }
-
+  const equal = useCallback(() => {
+    if (activeOperator) {
       setDisplay(
         getResultFromAction(memory || 0, activeOperator, display).toString()
       );
-      setMemory(null);
-      setHistory([]);
-      setActiveOperator(null);
-    },
-    [activeOperator, display, getResultFromAction, memory]
-  );
+    }
+
+    setMemory(null);
+    setHistory([]);
+    setActiveOperator(null);
+  }, [activeOperator, display, getResultFromAction, memory]);
 
   const executeCalculatorOperation = useCallback(
     (button: OperatorButton) => {
@@ -128,7 +135,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           break;
         }
         case Operator.Equal: {
-          equal(button);
+          equal();
           break;
         }
         default:
@@ -234,26 +241,57 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     ]
   );
 
-  const handleKeyDownEvent = useCallback(({ key }: KeyboardEvent) => {
-    switch (key) {
-      case DISPLAY_DEFAULT_VALUE:
-      case "1":
-      case "2":
-      case "3":
-      case "4":
-      case "5":
-      case "6":
-      case "7":
-      case "8":
-      case "9": {
-        setDisplay((state) => `${state}${key}`);
+  const handleKeyDownEvent = useCallback(
+    (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "Shift": {
+          setIsShiftPressed(true);
+          break;
+        }
+        case "h": {
+          setIsShortcutsShown(true);
+          break;
+        }
+        default: {
+          const clickedElement = refs.find((ref) => {
+            const keyboardKey = ref.dataset.keyboardKey as string;
+            return event.key.toLowerCase() === keyboardKey?.toLowerCase();
+          });
+
+          if (clickedElement) {
+            clickedElement?.click();
+            break;
+          }
+
+          console.log(`Keyboard click not handled: ${event.key}`);
+          break;
+        }
+      }
+    },
+    [refs]
+  );
+
+  const handleKeyUpEvent = useCallback((event: KeyboardEvent) => {
+    switch (event.key) {
+      case "Shift": {
+        setIsShiftPressed(false);
+        break;
+      }
+      case "h": {
+        setIsShortcutsShown(false);
         break;
       }
       default:
+        break;
     }
   }, []);
 
   useEvent("keydown", handleKeyDownEvent);
+  useEvent("keyup", handleKeyUpEvent);
+
+  const saveButtonRefs = useCallback((value: HTMLButtonElement[]) => {
+    setRefs(value);
+  }, []);
 
   const value: CalculatorProviderReturnProps = useMemo(
     () => ({
@@ -264,6 +302,9 @@ export const CalculatorProvider: React.FC = ({ children }) => {
       memory,
       activeOperator,
       history,
+      isShiftPressed,
+      saveButtonRefs,
+      isShortcutsShown,
     }),
     [
       history,
@@ -273,6 +314,9 @@ export const CalculatorProvider: React.FC = ({ children }) => {
       handleSetCurrentMode,
       memory,
       activeOperator,
+      isShiftPressed,
+      saveButtonRefs,
+      isShortcutsShown,
     ]
   );
 

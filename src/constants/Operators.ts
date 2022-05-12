@@ -32,4 +32,6 @@ export enum Operator {
   Dot = ".",
   Equal = "=",
   Plus = "+",
+  DoubleZero = "00",
+  Backspace = "Backspace",
 }

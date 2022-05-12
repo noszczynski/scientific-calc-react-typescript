@@ -9,6 +9,7 @@ test("renders learn react link", () => {
       disabled={false}
       label="Label"
       operator={Operator.Plus}
+      setRef={jest.fn}
       onClick={jest.fn}
     />
   );

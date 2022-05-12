@@ -2,6 +2,7 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { pxToRem } from "../../helpers";
 import { Operator } from "../../constants/Operators";
+import { useCalculator } from "../../hooks/useCalculator";
 
 export enum ButtonAppearance {
   Light,
@@ -21,10 +22,12 @@ export interface OperatorButton {
   label: string | Operator | JSX.Element;
   appearance: ButtonAppearance;
   type: ButtonType;
+  keyboardKey?: string;
 }
 
 export interface ButtonProps extends Partial<OperatorButton> {
   onClick(): void;
+  setRef(ref: HTMLButtonElement | null): void;
   disabled?: boolean;
 }
 
@@ -34,15 +37,25 @@ const Button: React.FC<ButtonProps> = ({
   disabled,
   appearance,
   operator,
+  keyboardKey,
+  setRef,
 }) => {
+  const { isShortcutsShown } = useCalculator();
+
   return (
     <Container
+      ref={(ref) => setRef(ref)}
       appearance={appearance}
       data-cy={operator}
+      data-keyboard-key={keyboardKey || label}
+      data-label={label}
+      data-operator={operator}
       disabled={disabled}
+      id={`button-${operator}`}
       onClick={onClick}
     >
       {label}
+      {isShortcutsShown && <Shortcut>{keyboardKey || label}</Shortcut>}
     </Container>
   );
 };
@@ -50,10 +63,11 @@ const Button: React.FC<ButtonProps> = ({
 const Container = styled.button<Pick<ButtonProps, "appearance">>`
   font-size: ${pxToRem(18)};
   border: none;
-  cursor: pointer;
   border-radius: ${pxToRem(4)};
   line-height: ${pxToRem(34)};
   text-align: center;
+  cursor: pointer;
+  position: relative;
 
   ${({ appearance }) => {
     switch (appearance) {
@@ -89,9 +103,22 @@ const Container = styled.button<Pick<ButtonProps, "appearance">>`
     }
   }};
 
-  &:disabled {
-    background-color: red;
+  &:focus {
+    outline: 1px solid red;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #202124;
+  }
+`;
+
+const Shortcut = styled.span`
+  line-height: 100%;
+  position: absolute;
+  bottom: ${pxToRem(2)};
+  right: ${pxToRem(2)};
+  font-size: ${pxToRem(10)};
 `;
 
 export default Button;
