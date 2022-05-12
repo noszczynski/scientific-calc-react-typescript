@@ -196,6 +196,13 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           });
           break;
         }
+        case Operator.Percent: {
+          setDisplay((state) => {
+            const num = Number(state) / 100;
+            return displayChecker(num.toString()).value;
+          });
+          break;
+        }
         default:
           throw Error("Error");
       }

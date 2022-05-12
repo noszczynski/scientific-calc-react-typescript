@@ -28,7 +28,7 @@ const Buttons: React.FC = () => {
       <Container>
         {buttons.map((button) => (
           <Button
-            key={button.label.toString()}
+            key={button.operator.toString()}
             setRef={(ref: HTMLButtonElement) => {
               setButtonRefsCache((state) => {
                 if (ref !== null) {

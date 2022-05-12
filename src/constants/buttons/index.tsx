@@ -14,22 +14,32 @@ const buttons: OperatorButton[] = [
     keyboardKey: "!",
   },
   {
-    label: "(",
-    operator: Operator.LeftBracket,
+    label: (
+      <span>
+        10<sup>x</sup>
+      </span>
+    ),
+    operator: Operator.PowerTen,
     appearance: ButtonAppearance.Light,
     type: ButtonType.Action,
+    keyboardKey: "y",
   },
   {
-    label: ")",
-    operator: Operator.RightBracket,
+    label: (
+      <span>
+        e<sup>x</sup>
+      </span>
+    ),
+    operator: Operator.ExponentPower,
     appearance: ButtonAppearance.Light,
     type: ButtonType.Action,
+    keyboardKey: "w",
   },
   {
     label: "%",
     operator: Operator.Percent,
     appearance: ButtonAppearance.Light,
-    type: ButtonType.Action,
+    type: ButtonType.Calculator,
   },
   {
     label: "00",
@@ -53,11 +63,15 @@ const buttons: OperatorButton[] = [
     keyboardKey: " ",
   },
   {
-    label: "Inv",
-    operator: Operator.Inv,
+    label: (
+      <span>
+        sin<sup>-1</sup>
+      </span>
+    ),
+    operator: Operator.SinusPow,
     appearance: ButtonAppearance.Light,
     type: ButtonType.Action,
-    keyboardKey: "i",
+    keyboardKey: "u",
   },
   {
     label: "sin",
@@ -67,11 +81,15 @@ const buttons: OperatorButton[] = [
     keyboardKey: "s",
   },
   {
-    label: "ln",
-    operator: Operator.Ln,
+    label: (
+      <span>
+        cos<sup>-1</sup>
+      </span>
+    ),
+    operator: Operator.CosinusPower,
     appearance: ButtonAppearance.Light,
     type: ButtonType.Action,
-    keyboardKey: "l",
+    keyboardKey: "k",
   },
   {
     label: "7",
@@ -190,8 +208,12 @@ const buttons: OperatorButton[] = [
     type: ButtonType.Action,
   },
   {
-    label: "Ans",
-    operator: Operator.Ans,
+    label: (
+      <span>
+        x<sup>2</sup>
+      </span>
+    ),
+    operator: Operator.PowerTwo,
     appearance: ButtonAppearance.Light,
     type: ButtonType.Action,
     keyboardKey: "a",
