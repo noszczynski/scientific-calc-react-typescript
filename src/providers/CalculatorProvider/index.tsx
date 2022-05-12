@@ -9,23 +9,19 @@ export enum RadianDegrees {
   Deg = "Deg",
 }
 
-type Memory = number;
-
+type Memory = number | null;
 type ActiveOperator = Operator | null;
-
 type DisplayValue = string;
+type History = OperatorButton;
 
 export interface CalculatorProviderReturnProps {
-  displayValue: string;
+  display: string;
   currentMode: Mode;
-  result: Memory;
+  memory: Memory;
   activeOperator: ActiveOperator;
+  history: History[];
   handleSetCurrentMode(mode: Mode): void;
   addOperation(button: OperatorButton): void;
-}
-
-export interface History {
-  button: OperatorButton;
 }
 
 export enum Mode {
@@ -34,10 +30,11 @@ export enum Mode {
 }
 
 export const initialProps: CalculatorProviderReturnProps = {
-  displayValue: "",
+  display: "",
   currentMode: Mode.Rad,
-  result: 0,
+  memory: null,
   activeOperator: null,
+  history: [],
   handleSetCurrentMode: () => {
     throw Error("Function handleSetCurrentMode is used before initialize");
   },
@@ -53,7 +50,7 @@ export const CalculatorContext =
 
 export const CalculatorProvider: React.FC = ({ children }) => {
   const [display, setDisplay] = useState<DisplayValue>(DISPLAY_DEFAULT_VALUE);
-  const [memory, setMemory] = useState<Memory>(0);
+  const [memory, setMemory] = useState<Memory>(null);
   const [activeOperator, setActiveOperator] = useState<ActiveOperator>(null);
   const [history, setHistory] = useState<History[]>([]);
   const [currentMode, setCurrentMode] = useState<Mode>(Mode.Rad);
@@ -64,7 +61,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
 
   const addToDisplay = useCallback((value: string | number) => {
     setDisplay((state) => {
-      if (state === DISPLAY_DEFAULT_VALUE) {
+      if (state === DISPLAY_DEFAULT_VALUE && value !== ".") {
         return `${value}`;
       }
 
@@ -81,7 +78,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     eraseDisplay();
   }, [eraseDisplay]);
 
-  const executeAction = useCallback(
+  const getResultFromAction = useCallback(
     (
       left: number | string,
       operator: Operator,
@@ -109,12 +106,18 @@ export const CalculatorProvider: React.FC = ({ children }) => {
 
   const equal = useCallback(
     ({ operator }: OperatorButton) => {
-      setDisplay(executeAction(memory, activeOperator!, display).toString());
-      setMemory(0);
+      if (!activeOperator) {
+        throw Error("No active operator");
+      }
+
+      setDisplay(
+        getResultFromAction(memory || 0, activeOperator, display).toString()
+      );
+      setMemory(null);
       setHistory([]);
       setActiveOperator(null);
     },
-    [activeOperator, display, executeAction, memory]
+    [activeOperator, display, getResultFromAction, memory]
   );
 
   const executeCalculatorOperation = useCallback(
@@ -159,23 +162,40 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     [display, addToDisplay]
   );
 
-  const executeActionOperation = useCallback(({ operator }: OperatorButton) => {
-    switch (operator) {
-      case Operator.Multiplier:
-      case Operator.Div:
-      case Operator.Plus:
-      case Operator.Minus: {
-        setActiveOperator(operator);
-        setDisplay((state) => {
-          setMemory(Number(state));
-          return DISPLAY_DEFAULT_VALUE;
-        });
-        break;
+  const executeActionOperation = useCallback(
+    ({ operator }: OperatorButton) => {
+      switch (operator) {
+        case Operator.Multiplier:
+        case Operator.Div:
+        case Operator.Plus:
+        case Operator.Minus: {
+          if (memory !== null) {
+            setMemory((state) => {
+              if (!activeOperator) {
+                throw Error("No activeOperator");
+              }
+
+              return getResultFromAction(state || 0, activeOperator, display);
+            });
+            setActiveOperator(operator);
+            eraseDisplay();
+            break;
+          }
+
+          setActiveOperator(operator);
+          setDisplay((state) => {
+            setMemory(Number(state));
+            return DISPLAY_DEFAULT_VALUE;
+          });
+
+          break;
+        }
+        default:
+          throw Error("Error");
       }
-      default:
-        throw Error("Error");
-    }
-  }, []);
+    },
+    [activeOperator, display, eraseDisplay, getResultFromAction, memory]
+  );
 
   const addOperation = useCallback(
     (button: OperatorButton) => {
@@ -201,7 +221,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
       }
       setHistory((state: History[]) => {
         const newState = _.cloneDeep(state);
-        newState.push({ button });
+        newState.push(button);
 
         return newState;
       });
@@ -213,51 +233,6 @@ export const CalculatorProvider: React.FC = ({ children }) => {
       executeDotOperation,
     ]
   );
-
-  /*
-  const executeOperationByOperator = useCallback(
-    (operator: Operator) => {
-      switch (operator) {
-        case Operator.Equal: {
-          equal();
-          setActiveOperator(Operator.Equal);
-          break;
-        }
-        case Operator.Clear: {
-          clearCalculations();
-          setActiveOperator(null);
-          break;
-        }
-        case Operator.One:
-        case Operator.Two:
-        case Operator.Three:
-        case Operator.Four:
-        case Operator.Five:
-        case Operator.Six:
-        case Operator.Seven:
-        case Operator.Eight:
-        case Operator.Nine:
-        case Operator.Zero: {
-          setDisplay((state) => `${state}${operator}`);
-          break;
-        }
-        case Operator.Multiplier:
-        case Operator.Div:
-        case Operator.Plus:
-        case Operator.Minus: {
-          // setResult(Number(displayValue));
-          setActiveOperator(operator);
-          setDisplay("");
-          break;
-        }
-        default: {
-          throw Error(`Unexpected Operator: ${operator}`);
-        }
-      }
-    },
-    [clearCalculations, equal]
-  );
-*/
 
   const handleKeyDownEvent = useCallback(({ key }: KeyboardEvent) => {
     switch (key) {
@@ -282,14 +257,16 @@ export const CalculatorProvider: React.FC = ({ children }) => {
 
   const value: CalculatorProviderReturnProps = useMemo(
     () => ({
-      displayValue: display,
+      display,
       addOperation,
       currentMode,
       handleSetCurrentMode,
-      result: memory,
+      memory,
       activeOperator,
+      history,
     }),
     [
+      history,
       display,
       addOperation,
       currentMode,

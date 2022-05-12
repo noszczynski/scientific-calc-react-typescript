@@ -8,19 +8,19 @@ type DisplayProps = {
 };
 
 const Display: React.FC<DisplayProps> = () => {
-  const { displayValue, result, activeOperator } = useCalculator();
+  const { display, memory, activeOperator } = useCalculator();
 
   return (
     <Container>
       <Bar>
         <span />
-        <span>{result || ""}</span>
+        <span>{memory ?? ""}</span>
       </Bar>
       <Bar>
         <span />
         <span>{activeOperator}</span>
       </Bar>
-      <Value data-cy="display">{displayValue}</Value>
+      <Value data-cy="display">{display}</Value>
     </Container>
   );
 };
@@ -48,12 +48,17 @@ const Bar = styled.span`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  font-size: ${pxToRem(12)};
+
+  span {
+    font-size: inherit;
+  }
 `;
 
 const Value = styled.span`
   display: flex;
   margin-left: auto;
-  font-size: ${pxToRem(30)};
+  font-size: ${pxToRem(32)};
 `;
 
 export default Display;
