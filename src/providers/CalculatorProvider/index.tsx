@@ -1,27 +1,31 @@
-import React, {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { createContext, useCallback, useMemo, useState } from "react";
 import * as _ from "lodash";
 import { Operator } from "../../constants/Operators";
+import { useEvent } from "react-use";
+import { ButtonType, OperatorButton } from "../../components/Button";
 
 export enum RadianDegrees {
   Radian = "Rad",
   Deg = "Deg",
 }
 
+type Memory = number;
+
+type ActiveOperator = Operator | null;
+
+type DisplayValue = string;
+
 export interface CalculatorProviderReturnProps {
   displayValue: string;
   currentMode: Mode;
+  result: Memory;
+  activeOperator: ActiveOperator;
   handleSetCurrentMode(mode: Mode): void;
-  addOperation(operator: Operator): void;
+  addOperation(button: OperatorButton): void;
 }
 
-export interface Calculation {
-  operator: Operator;
+export interface History {
+  button: OperatorButton;
 }
 
 export enum Mode {
@@ -32,6 +36,8 @@ export enum Mode {
 export const initialProps: CalculatorProviderReturnProps = {
   displayValue: "",
   currentMode: Mode.Rad,
+  result: 0,
+  activeOperator: null,
   handleSetCurrentMode: () => {
     throw Error("Function handleSetCurrentMode is used before initialize");
   },
@@ -40,197 +46,186 @@ export const initialProps: CalculatorProviderReturnProps = {
   },
 };
 
+const DISPLAY_DEFAULT_VALUE = "0";
+
 export const CalculatorContext =
   createContext<CalculatorProviderReturnProps>(initialProps);
 
 export const CalculatorProvider: React.FC = ({ children }) => {
-  const [displayValue, setDisplayValue] = useState<string>("0");
-  const [calculations, setCalculations] = useState<Calculation[]>([]);
+  const [display, setDisplay] = useState<DisplayValue>(DISPLAY_DEFAULT_VALUE);
+  const [memory, setMemory] = useState<Memory>(0);
+  const [activeOperator, setActiveOperator] = useState<ActiveOperator>(null);
+  const [history, setHistory] = useState<History[]>([]);
   const [currentMode, setCurrentMode] = useState<Mode>(Mode.Rad);
 
   const handleSetCurrentMode = useCallback((mode: Mode) => {
     setCurrentMode(mode);
   }, []);
 
-  const clearCalculations = useCallback(() => {
-    setCalculations([]);
-    setDisplayValue("0");
-  }, []);
-
-  const plus = useCallback(() => {
-    setDisplayValue((state) => state + "+");
-  }, []);
-
-  const minus = useCallback(() => {
-    setDisplayValue((state) => state + "-");
-  }, []);
-
-  const sinus = useCallback(() => {
-    setDisplayValue((state) => `sin(${state})`);
-  }, []);
-
-  const cosinus = useCallback(() => {
-    setDisplayValue((state) => `cos(${state})`);
-  }, []);
-
-  const tangens = useCallback(() => {
-    setDisplayValue((state) => `tan(${state})`);
-  }, []);
-
-  // const cotangens = useCallback(() => {
-  //   console.log("cotangens()");
-  // }, []);
-
-  const digit = useCallback((n: number) => {
-    setDisplayValue((state) => `${state}${n}`);
-  }, []);
-
-  const factorial = useCallback(() => {
-    // silnia
-    console.log("factorial()");
-    setDisplayValue((state) => state + "!");
-  }, []);
-
-  const dot = useCallback(() => {
-    setDisplayValue((state) => state + ".");
-  }, []);
-
-  const divide = useCallback(() => {
-    setDisplayValue((state) => state + "");
-  }, []);
-
-  const logarithm = useCallback(() => {
-    console.log("logarithm()");
-    setDisplayValue((state) => `log(${state})`);
-  }, []);
-
-  const addBracket = useCallback((bracket: "(" | ")") => {
-    setDisplayValue((state) => state + bracket);
-  }, []);
-
-  const multiplication = useCallback(() => {
-    console.log("multiplication()");
-  }, []);
-
-  const power = useCallback(() => {
-    console.log("power()");
-  }, []);
-
-  const percent = useCallback(() => {
-    console.log("percent()");
-  }, []);
-
-  const pi = useCallback(() => {
-    console.log("pi()");
-  }, []);
-
-  const equal = useCallback(() => {
-    const result = calculations.reduce((result, { operator }) => {
-      switch (operator) {
-        case Operator.One:
-        case Operator.Two:
-        case Operator.Three:
-        case Operator.Four:
-        case Operator.Five:
-        case Operator.Six:
-        case Operator.Seven:
-        case Operator.Eight:
-        case Operator.Nine:
-        case Operator.Zero: {
-          return result * 10 + Number(operator);
-        }
-        case Operator.Factorial:
-          return result;
-        case Operator.LeftBracket:
-          return result;
-        case Operator.RightBracket:
-          return result;
-        case Operator.Percent:
-          return result;
-        case Operator.Clear:
-          return result;
-        case Operator.Inv:
-          return result;
-        case Operator.Sinus:
-          return result;
-        case Operator.Ln:
-          return result;
-        case Operator.Div:
-          return result;
-        case Operator.PI:
-          return result;
-        case Operator.Cosinus:
-          return result;
-        case Operator.Logarithm:
-          return result;
-        case Operator.Multiplier:
-          return result;
-        case Operator.Exponent:
-          return result;
-        case Operator.Tangens:
-          return result;
-        case Operator.Root:
-          return result;
-        case Operator.Minus:
-          return result;
-        case Operator.Ans:
-          return result;
-        case Operator.Exp:
-          return result;
-        case Operator.Power:
-          return result;
-        case Operator.Dot:
-          return result;
-        case Operator.Equal:
-          return result;
-        case Operator.Plus:
-          return result;
-        default:
-          return result;
+  const addToDisplay = useCallback((value: string | number) => {
+    setDisplay((state) => {
+      if (state === DISPLAY_DEFAULT_VALUE) {
+        return `${value}`;
       }
-    }, 0);
 
-    setDisplayValue(String(result));
-    setCalculations([]);
-  }, [calculations]);
-
-  const addOperation = useCallback((operator: Operator) => {
-    setCalculations((state: Calculation[]) => {
-      const newState = _.cloneDeep(state);
-      newState.push({ operator });
-
-      return newState;
+      return `${state}${value}`;
     });
   }, []);
 
-  // todo change name
+  const eraseDisplay = useCallback(() => {
+    setDisplay(DISPLAY_DEFAULT_VALUE);
+  }, []);
+
+  const clearCalculations = useCallback(() => {
+    setHistory([]);
+    eraseDisplay();
+  }, [eraseDisplay]);
+
+  const executeAction = useCallback(
+    (
+      left: number | string,
+      operator: Operator,
+      right?: number | string
+    ): number => {
+      switch (operator) {
+        case Operator.Multiplier: {
+          return Number(left) * Number(right);
+        }
+        case Operator.Div: {
+          return Number(left) / Number(right);
+        }
+        case Operator.Plus: {
+          return Number(left) + Number(right);
+        }
+        case Operator.Minus: {
+          return Number(left) - Number(right);
+        }
+        default:
+          throw Error("Error");
+      }
+    },
+    []
+  );
+
+  const equal = useCallback(
+    ({ operator }: OperatorButton) => {
+      setDisplay(executeAction(memory, activeOperator!, display).toString());
+      setMemory(0);
+      setHistory([]);
+      setActiveOperator(null);
+    },
+    [activeOperator, display, executeAction, memory]
+  );
+
+  const executeCalculatorOperation = useCallback(
+    (button: OperatorButton) => {
+      switch (button.operator) {
+        case Operator.Clear: {
+          clearCalculations();
+          break;
+        }
+        case Operator.Equal: {
+          equal(button);
+          break;
+        }
+        default:
+          throw Error("Error");
+      }
+    },
+    [clearCalculations, equal]
+  );
+
+  const executeDigitOperation = useCallback(
+    ({ operator, type }: OperatorButton) => {
+      if (type !== ButtonType.Digit) {
+        throw Error("Error");
+      }
+
+      addToDisplay(operator);
+    },
+    [addToDisplay]
+  );
+
+  const executeDotOperation = useCallback(
+    ({ operator, type }: OperatorButton) => {
+      if (operator !== Operator.Dot || type !== ButtonType.Dot) {
+        throw Error("Error");
+      }
+
+      if (!display.includes(".")) {
+        addToDisplay(".");
+      }
+    },
+    [display, addToDisplay]
+  );
+
+  const executeActionOperation = useCallback(({ operator }: OperatorButton) => {
+    switch (operator) {
+      case Operator.Multiplier:
+      case Operator.Div:
+      case Operator.Plus:
+      case Operator.Minus: {
+        setActiveOperator(operator);
+        setDisplay((state) => {
+          setMemory(Number(state));
+          return DISPLAY_DEFAULT_VALUE;
+        });
+        break;
+      }
+      default:
+        throw Error("Error");
+    }
+  }, []);
+
+  const addOperation = useCallback(
+    (button: OperatorButton) => {
+      switch (button.type) {
+        case ButtonType.Calculator: {
+          executeCalculatorOperation(button);
+          break;
+        }
+        case ButtonType.Digit: {
+          executeDigitOperation(button);
+          break;
+        }
+        case ButtonType.Dot: {
+          executeDotOperation(button);
+          break;
+        }
+        case ButtonType.Action: {
+          executeActionOperation(button);
+          break;
+        }
+        default:
+          throw Error(`Unexpected button type: ${button.type}`);
+      }
+      setHistory((state: History[]) => {
+        const newState = _.cloneDeep(state);
+        newState.push({ button });
+
+        return newState;
+      });
+    },
+    [
+      executeActionOperation,
+      executeCalculatorOperation,
+      executeDigitOperation,
+      executeDotOperation,
+    ]
+  );
+
+  /*
   const executeOperationByOperator = useCallback(
     (operator: Operator) => {
       switch (operator) {
         case Operator.Equal: {
           equal();
-          break;
-        }
-        case Operator.Ans: {
+          setActiveOperator(Operator.Equal);
           break;
         }
         case Operator.Clear: {
           clearCalculations();
-          break;
-        }
-        case Operator.Cosinus: {
-          cosinus();
-          break;
-        }
-        case Operator.Div: {
-          divide();
-          break;
-        }
-        case Operator.Dot: {
-          dot();
-          break;
-        }
-        case Operator.Exponent: {
+          setActiveOperator(null);
           break;
         }
         case Operator.One:
@@ -243,64 +238,16 @@ export const CalculatorProvider: React.FC = ({ children }) => {
         case Operator.Eight:
         case Operator.Nine:
         case Operator.Zero: {
-          digit(Number(operator));
+          setDisplay((state) => `${state}${operator}`);
           break;
         }
-        case Operator.Exp: {
-          break;
-        }
-        case Operator.Factorial: {
-          factorial();
-          break;
-        }
-        case Operator.Inv: {
-          break;
-        }
-        case Operator.LeftBracket:
-        case Operator.RightBracket: {
-          addBracket(operator);
-          break;
-        }
-        case Operator.Ln: {
-          break;
-        }
-        case Operator.Logarithm: {
-          logarithm();
-          break;
-        }
+        case Operator.Multiplier:
+        case Operator.Div:
+        case Operator.Plus:
         case Operator.Minus: {
-          minus();
-          break;
-        }
-        case Operator.Percent: {
-          percent();
-          break;
-        }
-        case Operator.PI: {
-          pi();
-          break;
-        }
-        case Operator.Plus: {
-          plus();
-          break;
-        }
-        case Operator.Power: {
-          power();
-          break;
-        }
-        case Operator.Root: {
-          break;
-        }
-        case Operator.Sinus: {
-          sinus();
-          break;
-        }
-        case Operator.Tangens: {
-          tangens();
-          break;
-        }
-        case Operator.Multiplier: {
-          multiplication();
+          // setResult(Number(displayValue));
+          setActiveOperator(operator);
+          setDisplay("");
           break;
         }
         default: {
@@ -308,49 +255,48 @@ export const CalculatorProvider: React.FC = ({ children }) => {
         }
       }
     },
-    [
-      addBracket,
-      clearCalculations,
-      cosinus,
-      digit,
-      divide,
-      dot,
-      equal,
-      factorial,
-      logarithm,
-      minus,
-      multiplication,
-      percent,
-      pi,
-      plus,
-      power,
-      sinus,
-      tangens,
-    ]
+    [clearCalculations, equal]
   );
+*/
 
-  useEffect(() => {
-    if (displayValue.at(0) === "0" && displayValue.length > 1) {
-      setDisplayValue((state) => state.slice(1, state.length));
+  const handleKeyDownEvent = useCallback(({ key }: KeyboardEvent) => {
+    switch (key) {
+      case DISPLAY_DEFAULT_VALUE:
+      case "1":
+      case "2":
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "7":
+      case "8":
+      case "9": {
+        setDisplay((state) => `${state}${key}`);
+        break;
+      }
+      default:
     }
-  }, [displayValue]);
+  }, []);
 
-  useEffect(() => {
-    const current = calculations.at(-1);
-
-    if (current) {
-      executeOperationByOperator(current.operator);
-    }
-  }, [calculations, executeOperationByOperator]);
+  useEvent("keydown", handleKeyDownEvent);
 
   const value: CalculatorProviderReturnProps = useMemo(
     () => ({
-      displayValue,
+      displayValue: display,
       addOperation,
       currentMode,
       handleSetCurrentMode,
+      result: memory,
+      activeOperator,
     }),
-    [displayValue, addOperation, currentMode, handleSetCurrentMode]
+    [
+      display,
+      addOperation,
+      currentMode,
+      handleSetCurrentMode,
+      memory,
+      activeOperator,
+    ]
   );
 
   return (

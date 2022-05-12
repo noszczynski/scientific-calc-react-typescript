@@ -9,10 +9,18 @@ export enum ButtonAppearance {
   Special,
 }
 
+export enum ButtonType {
+  Digit = "Digit",
+  Dot = "Dot",
+  Action = "Action",
+  Calculator = "Calculator",
+}
+
 export interface OperatorButton {
   operator: Operator;
   label: string | Operator | JSX.Element;
   appearance: ButtonAppearance;
+  type: ButtonType;
 }
 
 export interface ButtonProps extends Partial<OperatorButton> {

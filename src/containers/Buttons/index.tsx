@@ -1,21 +1,16 @@
 import React, { useCallback } from "react";
-import Button from "../../components/Button";
+import Button, { OperatorButton } from "../../components/Button";
 import styled from "styled-components";
 import { pxToRem } from "../../helpers";
 import buttons from "../../constants/buttons";
 import { useCalculator } from "../../hooks/useCalculator";
 import { RadianDegreesSwitch } from "../../components/RadianDegreesSwitch";
-import { Operator } from "../../constants/Operators";
 
-type ButtonsProps = {
-  //
-};
-
-const Buttons: React.FC<ButtonsProps> = () => {
+const Buttons: React.FC = () => {
   const { addOperation } = useCalculator();
 
   const callback = useCallback(
-    (operator: Operator) => () => addOperation(operator),
+    (button: OperatorButton) => () => addOperation(button),
     [addOperation]
   );
 
@@ -25,7 +20,7 @@ const Buttons: React.FC<ButtonsProps> = () => {
       {buttons.map((button) => (
         <Button
           key={button.label.toString()}
-          onClick={callback(button.operator)}
+          onClick={callback(button)}
           {...button}
         />
       ))}

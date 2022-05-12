@@ -8,13 +8,17 @@ type DisplayProps = {
 };
 
 const Display: React.FC<DisplayProps> = () => {
-  const { displayValue } = useCalculator();
+  const { displayValue, result, activeOperator } = useCalculator();
 
   return (
     <Container>
       <Bar>
-        <button>back</button>
-        <span>Ans = 0</span>
+        <span />
+        <span>{result || ""}</span>
+      </Bar>
+      <Bar>
+        <span />
+        <span>{activeOperator}</span>
       </Bar>
       <Value data-cy="display">{displayValue}</Value>
     </Container>
