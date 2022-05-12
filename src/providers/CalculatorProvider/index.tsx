@@ -54,6 +54,34 @@ export const initialProps: CalculatorProviderReturnProps = {
 const DISPLAY_DEFAULT_VALUE = "0";
 const DISPLAY_DEFAULT_CHAR_LIMIT = 12;
 
+const displayChecker = (value: string): { ok: boolean; value: string } => {
+  if (!value.length) {
+    return {
+      ok: false,
+      value: DISPLAY_DEFAULT_VALUE,
+    };
+  }
+
+  if (value.length > DISPLAY_DEFAULT_CHAR_LIMIT) {
+    return {
+      ok: false,
+      value: value.slice(0, DISPLAY_DEFAULT_CHAR_LIMIT),
+    };
+  }
+
+  if (value.length > 1 && value.at(0) === "0") {
+    return {
+      ok: false,
+      value: value.slice(1, value.length),
+    };
+  }
+
+  return {
+    ok: true,
+    value,
+  };
+};
+
 export const CalculatorContext =
   createContext<CalculatorProviderReturnProps>(initialProps);
 
@@ -75,20 +103,20 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     setDisplay((state) => {
       if (state === DISPLAY_DEFAULT_VALUE) {
         if (value === "00") {
-          return DISPLAY_DEFAULT_VALUE;
+          return displayChecker(DISPLAY_DEFAULT_VALUE).value;
         }
 
         if (value !== ".") {
-          return `${value}`;
+          return displayChecker(`${value}`).value;
         }
       }
 
-      return `${state}${value}`;
+      return displayChecker(`${state}${value}`).value;
     });
   }, []);
 
   const eraseDisplay = useCallback(() => {
-    setDisplay(DISPLAY_DEFAULT_VALUE);
+    setDisplay(displayChecker(DISPLAY_DEFAULT_VALUE).value);
   }, []);
 
   const clearCalculations = useCallback(() => {
@@ -125,7 +153,9 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   const equal = useCallback(() => {
     if (activeOperator) {
       setDisplay(
-        getResultFromAction(memory || 0, activeOperator, display).toString()
+        displayChecker(
+          getResultFromAction(memory || 0, activeOperator, display).toString()
+        ).value
       );
     }
 
@@ -153,16 +183,16 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           setDisplay((state) => {
             if (state.length >= 2) {
               if (state.at(-2) === ".") {
-                return state.slice(0, -2);
+                return displayChecker(state.slice(0, -2)).value;
               }
-              return state.slice(0, -1);
+              return displayChecker(state.slice(0, -1)).value;
             }
 
             if (state.length === 1) {
-              return DISPLAY_DEFAULT_VALUE;
+              return displayChecker(DISPLAY_DEFAULT_VALUE).value;
             }
 
-            return state;
+            return displayChecker(state).value;
           });
           break;
         }
@@ -220,7 +250,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           setActiveOperator(operator);
           setDisplay((state) => {
             setMemory(Number(state));
-            return DISPLAY_DEFAULT_VALUE;
+            return displayChecker(DISPLAY_DEFAULT_VALUE).value;
           });
 
           break;
