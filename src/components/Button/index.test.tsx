@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import Button, { ButtonAppearance } from "./index";
-import { Operator } from "../../providers/CalculatorProvider";
+import { Operator } from "../../constants/Operators";
 
 test("renders learn react link", () => {
   render(

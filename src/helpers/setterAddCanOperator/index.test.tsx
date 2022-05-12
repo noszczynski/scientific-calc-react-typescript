@@ -1,5 +1,5 @@
 import { setterAddCanOperator } from "./index";
-import { Operator } from "../../providers/CalculatorProvider";
+import { Operator } from "../../constants/Operators";
 
 test("setterAddCanOperator correct works with adding", () => {
   expect(setterAddCanOperator(Operator.One)(new Set())).toEqual(

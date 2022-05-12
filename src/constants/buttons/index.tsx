@@ -1,5 +1,5 @@
 import { ButtonAppearance, OperatorButton } from "../../components/Button";
-import { Operator } from "../../providers/CalculatorProvider";
+import { Operator } from "../Operators";
 
 const buttons: OperatorButton[] = [
   {

@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { pxToRem } from "../../helpers";
-import { Operator } from "../../providers/CalculatorProvider";
+import { Operator } from "../../constants/Operators";
 
 export enum ButtonAppearance {
   Light,

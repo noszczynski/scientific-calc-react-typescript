@@ -1,4 +1,4 @@
-import { Operator } from "../../providers/CalculatorProvider";
+import { Operator } from "../../constants/Operators";
 
 export const setterAddCanOperator =
   (operator: Operator) => (state: Set<Operator>) => {

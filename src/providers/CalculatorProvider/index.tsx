@@ -6,54 +6,15 @@ import React, {
   useState,
 } from "react";
 import * as _ from "lodash";
-import { setterToggleCanOperator } from "../../helpers/setterToggleCanOperator";
-import { setterAddCanOperator } from "../../helpers/setterAddCanOperator";
-import { setterDeleteCanOperator } from "../../helpers/setterDeleteCanOperator";
+import { Operator } from "../../constants/Operators";
 
 export enum RadianDegrees {
   Radian = "Rad",
   Deg = "Deg",
 }
 
-export enum Operator {
-  Factorial = "x!",
-  LeftBracket = "(",
-  RightBracket = ")",
-  Percent = "%",
-  Clear = "CE",
-  Inv = "Inv",
-  Sinus = "sin",
-  Ln = "ln",
-  Seven = "7",
-  Eight = "8",
-  Nine = "9",
-  Div = "÷",
-  PI = "π",
-  Cosinus = "cos",
-  Logarithm = "log",
-  Four = "4",
-  Five = "5",
-  Six = "6",
-  Multiplier = "×",
-  Exponent = "e",
-  Tangens = "tan",
-  Root = "√",
-  One = "1",
-  Two = "2",
-  Three = "3",
-  Minus = "-",
-  Ans = "Ans",
-  Exp = "Exp",
-  Power = "pow",
-  Zero = "0",
-  Dot = ".",
-  Equal = "=",
-  Plus = "+",
-}
-
 export interface CalculatorProviderReturnProps {
   displayValue: string;
-  can: Set<Operator>;
   currentMode: Mode;
   handleSetCurrentMode(mode: Mode): void;
   addOperation(operator: Operator): void;
@@ -63,35 +24,6 @@ export interface Calculation {
   operator: Operator;
 }
 
-const initialCan: Operator[] = [
-  Operator.One,
-  Operator.Two,
-  Operator.Three,
-  Operator.Four,
-  Operator.Five,
-  Operator.Six,
-  Operator.Seven,
-  Operator.Eight,
-  Operator.Nine,
-  Operator.Zero,
-  Operator.Equal,
-  Operator.Dot,
-  Operator.Percent,
-  Operator.Clear,
-  Operator.RightBracket,
-  Operator.LeftBracket,
-  Operator.Factorial,
-  Operator.Inv,
-  Operator.Ln,
-  Operator.Div,
-  Operator.PI,
-  Operator.Cosinus,
-  Operator.Logarithm,
-  Operator.Exponent,
-  Operator.Ans,
-  Operator.Power,
-];
-
 export enum Mode {
   Rad = "Rad",
   Deg = "Deg",
@@ -99,7 +31,6 @@ export enum Mode {
 
 export const initialProps: CalculatorProviderReturnProps = {
   displayValue: "",
-  can: new Set(),
   currentMode: Mode.Rad,
   handleSetCurrentMode: () => {
     throw Error("Function handleSetCurrentMode is used before initialize");
@@ -115,7 +46,6 @@ export const CalculatorContext =
 export const CalculatorProvider: React.FC = ({ children }) => {
   const [displayValue, setDisplayValue] = useState<string>("0");
   const [calculations, setCalculations] = useState<Calculation[]>([]);
-  const [can, setCan] = useState<Set<Operator>>(new Set(initialCan));
   const [currentMode, setCurrentMode] = useState<Mode>(Mode.Rad);
 
   const handleSetCurrentMode = useCallback((mode: Mode) => {
@@ -125,18 +55,6 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   const clearCalculations = useCallback(() => {
     setCalculations([]);
     setDisplayValue("0");
-  }, []);
-
-  const toggleCanOperator = useCallback((operator: Operator) => {
-    setCan(setterToggleCanOperator(operator));
-  }, []);
-
-  const addCanOperator = useCallback((operator: Operator) => {
-    setCan(setterAddCanOperator(operator));
-  }, []);
-
-  const deleteCanOperator = useCallback((operator: Operator) => {
-    setCan(setterDeleteCanOperator(operator));
   }, []);
 
   const plus = useCallback(() => {
@@ -427,13 +345,12 @@ export const CalculatorProvider: React.FC = ({ children }) => {
 
   const value: CalculatorProviderReturnProps = useMemo(
     () => ({
-      can,
       displayValue,
       addOperation,
       currentMode,
       handleSetCurrentMode,
     }),
-    [can, displayValue, addOperation, currentMode, handleSetCurrentMode]
+    [displayValue, addOperation, currentMode, handleSetCurrentMode]
   );
 
   return (

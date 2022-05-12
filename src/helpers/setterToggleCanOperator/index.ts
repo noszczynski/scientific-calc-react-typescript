@@ -1,4 +1,4 @@
-import { Operator } from "../../providers/CalculatorProvider";
+import { Operator } from "../../constants/Operators";
 
 export const setterToggleCanOperator =
   (operator: Operator) => (state: Set<Operator>) => {

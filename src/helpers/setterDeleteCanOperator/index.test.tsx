@@ -1,5 +1,5 @@
 import { setterDeleteCanOperator } from "./index";
-import { Operator } from "../../providers/CalculatorProvider";
+import { Operator } from "../../constants/Operators";
 
 test("setterDeleteCanOperator correct works with adding", () => {
   expect(setterDeleteCanOperator(Operator.One)(new Set())).toEqual(new Set());

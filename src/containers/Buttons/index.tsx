@@ -2,17 +2,17 @@ import React, { useCallback } from "react";
 import Button from "../../components/Button";
 import styled from "styled-components";
 import { pxToRem } from "../../helpers";
-import { Operator } from "../../providers/CalculatorProvider";
 import buttons from "../../constants/buttons";
 import { useCalculator } from "../../hooks/useCalculator";
 import { RadianDegreesSwitch } from "../../components/RadianDegreesSwitch";
+import { Operator } from "../../constants/Operators";
 
 type ButtonsProps = {
   //
 };
 
 const Buttons: React.FC<ButtonsProps> = () => {
-  const { addOperation, can } = useCalculator();
+  const { addOperation } = useCalculator();
 
   const callback = useCallback(
     (operator: Operator) => () => addOperation(operator),
@@ -25,7 +25,6 @@ const Buttons: React.FC<ButtonsProps> = () => {
       {buttons.map((button) => (
         <Button
           key={button.label.toString()}
-          disabled={!can.has(button.operator)}
           onClick={callback(button.operator)}
           {...button}
         />
