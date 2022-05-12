@@ -244,6 +244,10 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   const handleKeyDownEvent = useCallback(
     (event: KeyboardEvent) => {
       switch (event.key) {
+        case "Enter": {
+          equal();
+          break;
+        }
         case "Shift": {
           setIsShiftPressed(true);
           break;
@@ -268,7 +272,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
         }
       }
     },
-    [refs]
+    [equal, refs]
   );
 
   const handleKeyUpEvent = useCallback((event: KeyboardEvent) => {
