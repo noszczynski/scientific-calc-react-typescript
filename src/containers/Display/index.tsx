@@ -16,7 +16,7 @@ const Display: React.FC<DisplayProps> = () => {
         <button>back</button>
         <span>Ans = 0</span>
       </Bar>
-      <Value>{displayValue}</Value>
+      <Value data-cy="display">{displayValue}</Value>
     </Container>
   );
 };

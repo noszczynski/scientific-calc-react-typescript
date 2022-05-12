@@ -25,9 +25,15 @@ const Button: React.FC<ButtonProps> = ({
   label,
   disabled,
   appearance,
+  operator,
 }) => {
   return (
-    <Container appearance={appearance} disabled={disabled} onClick={onClick}>
+    <Container
+      appearance={appearance}
+      data-cy={operator}
+      disabled={disabled}
+      onClick={onClick}
+    >
       {label}
     </Container>
   );

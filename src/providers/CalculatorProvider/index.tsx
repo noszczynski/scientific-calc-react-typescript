@@ -124,6 +124,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
 
   const clearCalculations = useCallback(() => {
     setCalculations([]);
+    setDisplayValue("0");
   }, []);
 
   const toggleCanOperator = useCallback((operator: Operator) => {
@@ -206,8 +207,74 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   }, []);
 
   const equal = useCallback(() => {
-    clearCalculations();
-  }, [clearCalculations]);
+    const result = calculations.reduce((result, { operator }) => {
+      switch (operator) {
+        case Operator.One:
+        case Operator.Two:
+        case Operator.Three:
+        case Operator.Four:
+        case Operator.Five:
+        case Operator.Six:
+        case Operator.Seven:
+        case Operator.Eight:
+        case Operator.Nine:
+        case Operator.Zero: {
+          return result * 10 + Number(operator);
+        }
+        case Operator.Factorial:
+          return result;
+        case Operator.LeftBracket:
+          return result;
+        case Operator.RightBracket:
+          return result;
+        case Operator.Percent:
+          return result;
+        case Operator.Clear:
+          return result;
+        case Operator.Inv:
+          return result;
+        case Operator.Sinus:
+          return result;
+        case Operator.Ln:
+          return result;
+        case Operator.Div:
+          return result;
+        case Operator.PI:
+          return result;
+        case Operator.Cosinus:
+          return result;
+        case Operator.Logarithm:
+          return result;
+        case Operator.Multiplier:
+          return result;
+        case Operator.Exponent:
+          return result;
+        case Operator.Tangens:
+          return result;
+        case Operator.Root:
+          return result;
+        case Operator.Minus:
+          return result;
+        case Operator.Ans:
+          return result;
+        case Operator.Exp:
+          return result;
+        case Operator.Power:
+          return result;
+        case Operator.Dot:
+          return result;
+        case Operator.Equal:
+          return result;
+        case Operator.Plus:
+          return result;
+        default:
+          return result;
+      }
+    }, 0);
+
+    setDisplayValue(String(result));
+    setCalculations([]);
+  }, [calculations]);
 
   const addOperation = useCallback((operator: Operator) => {
     setCalculations((state: Calculation[]) => {
@@ -343,6 +410,12 @@ export const CalculatorProvider: React.FC = ({ children }) => {
       tangens,
     ]
   );
+
+  useEffect(() => {
+    if (displayValue.at(0) === "0" && displayValue.length > 1) {
+      setDisplayValue((state) => state.slice(1, state.length));
+    }
+  }, [displayValue]);
 
   useEffect(() => {
     const current = calculations.at(-1);
