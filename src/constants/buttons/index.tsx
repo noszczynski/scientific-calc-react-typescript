@@ -19,11 +19,37 @@ export interface OperatorButton {
   keyboardKey?: string;
 }
 
-/* Factorial */
-interface FactorialButton extends OperatorButton {
-  operator: Operator.Factorial;
+export interface ButtonAppearanceLight {
   appearance: ButtonAppearance.Light;
+}
+
+export interface ButtonAppearanceDark {
+  appearance: ButtonAppearance.Dark;
+}
+
+export interface ButtonTypeDigit extends ButtonAppearanceDark {
+  type: ButtonType.Digit;
+}
+
+export interface ButtonTypeDot extends ButtonAppearanceDark {
+  type: ButtonType.Dot;
+}
+
+export interface ButtonTypeCurrentValueAction extends ButtonAppearanceLight {
+  type: ButtonType.CurrentValueAction;
+}
+
+export interface ButtonTypeParameterAction extends ButtonAppearanceLight {
+  type: ButtonType.ParameterAction;
+}
+
+export interface ButtonTypeNoParameterAction extends ButtonAppearanceLight {
   type: ButtonType.NoParameterAction;
+}
+
+/* Factorial */
+interface FactorialButton extends OperatorButton, ButtonTypeNoParameterAction {
+  operator: Operator.Factorial;
 }
 
 const factorialButton: FactorialButton = {
@@ -36,11 +62,9 @@ const factorialButton: FactorialButton = {
 /* Factorial */
 
 /* PowerTen */
-interface PowerTenButton extends OperatorButton {
+interface PowerTenButton extends OperatorButton, ButtonTypeCurrentValueAction {
   label: JSX.Element;
   operator: Operator.PowerTen;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.CurrentValueAction;
 }
 
 const powerTenButton: PowerTenButton = {
@@ -57,10 +81,11 @@ const powerTenButton: PowerTenButton = {
 /* PowerTen */
 
 /* EulerPower */
-interface EulerPowerButton extends OperatorButton {
+interface EulerPowerButton
+  extends OperatorButton,
+    ButtonTypeCurrentValueAction {
+  label: JSX.Element;
   operator: Operator.EulerPower;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.CurrentValueAction;
 }
 
 const eulerPowerButton: EulerPowerButton = {
@@ -77,10 +102,8 @@ const eulerPowerButton: EulerPowerButton = {
 /* EulerPower */
 
 /* Percent */
-interface PercentButton extends OperatorButton {
+interface PercentButton extends OperatorButton, ButtonTypeNoParameterAction {
   operator: Operator.Percent;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.NoParameterAction;
 }
 
 const percentButton: PercentButton = {
@@ -92,10 +115,8 @@ const percentButton: PercentButton = {
 /* Percent */
 
 /* DoubleZero */
-interface DoubleZeroButton extends OperatorButton {
+interface DoubleZeroButton extends OperatorButton, ButtonTypeNoParameterAction {
   operator: Operator.DoubleZero;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.NoParameterAction;
 }
 
 const doubleZeroButton: DoubleZeroButton = {
@@ -108,10 +129,8 @@ const doubleZeroButton: DoubleZeroButton = {
 /* DoubleZero */
 
 /* Backspace */
-interface BackspaceButton extends OperatorButton {
+interface BackspaceButton extends OperatorButton, ButtonTypeNoParameterAction {
   operator: Operator.Backspace;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.NoParameterAction;
 }
 
 const backspaceButton: BackspaceButton = {
@@ -124,10 +143,8 @@ const backspaceButton: BackspaceButton = {
 /* Backspace */
 
 /* Clear */
-interface ClearButton extends OperatorButton {
+interface ClearButton extends OperatorButton, ButtonTypeNoParameterAction {
   operator: Operator.Clear;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.NoParameterAction;
 }
 
 const clearButton: ClearButton = {
@@ -140,10 +157,9 @@ const clearButton: ClearButton = {
 /* Clear */
 
 /* SinusPow */
-interface SinusPowButton extends OperatorButton {
+interface SinusPowButton extends OperatorButton, ButtonTypeParameterAction {
+  label: JSX.Element;
   operator: Operator.SinusPow;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const sinusPowButton: SinusPowButton = {
@@ -160,10 +176,8 @@ const sinusPowButton: SinusPowButton = {
 /* SinusPow */
 
 /* Sinus */
-interface SinusButton extends OperatorButton {
+interface SinusButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Sinus;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const sinusButton: SinusButton = {
@@ -176,10 +190,9 @@ const sinusButton: SinusButton = {
 /* Sinus */
 
 /* CosinusPower */
-interface CosinusPowerButton extends OperatorButton {
+interface CosinusPowerButton extends OperatorButton, ButtonTypeParameterAction {
+  label: JSX.Element;
   operator: Operator.CosinusPower;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const cosinusPowerButton: CosinusPowerButton = {
@@ -196,10 +209,8 @@ const cosinusPowerButton: CosinusPowerButton = {
 /* CosinusPower */
 
 /* Seven */
-interface SevenButton extends OperatorButton {
+interface SevenButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.Seven;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const sevenButton: SevenButton = {
@@ -211,10 +222,8 @@ const sevenButton: SevenButton = {
 /* Seven */
 
 /* Eight */
-interface EightButton extends OperatorButton {
+interface EightButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.Eight;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const eightButton: EightButton = {
@@ -226,10 +235,8 @@ const eightButton: EightButton = {
 /* Eight */
 
 /* Nine */
-interface NineButton extends OperatorButton {
+interface NineButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.Nine;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const nineButton: NineButton = {
@@ -241,10 +248,8 @@ const nineButton: NineButton = {
 /* Nine */
 
 /* Div */
-interface DivButton extends OperatorButton {
+interface DivButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Div;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const divButton: DivButton = {
@@ -257,10 +262,8 @@ const divButton: DivButton = {
 /* Div */
 
 /* PI */
-interface PIButton extends OperatorButton {
+interface PIButton extends OperatorButton, ButtonTypeCurrentValueAction {
   operator: Operator.PI;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.CurrentValueAction;
 }
 
 const piButton: PIButton = {
@@ -273,10 +276,8 @@ const piButton: PIButton = {
 /* PI */
 
 /* Cosinus */
-interface CosinusButton extends OperatorButton {
+interface CosinusButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Cosinus;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const cosinusButton: CosinusButton = {
@@ -289,10 +290,8 @@ const cosinusButton: CosinusButton = {
 /* Cosinus */
 
 /* Logarithm */
-interface LogarithmButton extends OperatorButton {
+interface LogarithmButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Logarithm;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const logarithmButton: LogarithmButton = {
@@ -305,10 +304,8 @@ const logarithmButton: LogarithmButton = {
 /* Logarithm */
 
 /* Four */
-interface FourButton extends OperatorButton {
+interface FourButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.Four;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const fourButton: FourButton = {
@@ -320,10 +317,8 @@ const fourButton: FourButton = {
 /* Four */
 
 /* Five */
-interface FiveButton extends OperatorButton {
+interface FiveButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.Five;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const fiveButton: FiveButton = {
@@ -335,10 +330,8 @@ const fiveButton: FiveButton = {
 /* Five */
 
 /* Six */
-interface SixButton extends OperatorButton {
+interface SixButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.Six;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const sixButton: SixButton = {
@@ -350,10 +343,8 @@ const sixButton: SixButton = {
 /* Six */
 
 /* Multiplier */
-interface MultiplierButton extends OperatorButton {
+interface MultiplierButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Multiplier;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const multiplierButton: MultiplierButton = {
@@ -366,10 +357,8 @@ const multiplierButton: MultiplierButton = {
 /* Multiplier */
 
 /* Euler */
-interface EulerButton extends OperatorButton {
+interface EulerButton extends OperatorButton, ButtonTypeCurrentValueAction {
   operator: Operator.Euler;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.CurrentValueAction;
 }
 
 const eulerButton: EulerButton = {
@@ -382,10 +371,8 @@ const eulerButton: EulerButton = {
 /* Euler */
 
 /* Tangens */
-interface TangensButton extends OperatorButton {
+interface TangensButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Tangens;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const tangensButton: TangensButton = {
@@ -398,10 +385,8 @@ const tangensButton: TangensButton = {
 /* Tangens */
 
 /* Root */
-interface RootButton extends OperatorButton {
+interface RootButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Root;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const rootButton: RootButton = {
@@ -414,10 +399,8 @@ const rootButton: RootButton = {
 /* Root */
 
 /* One */
-interface OneButton extends OperatorButton {
+interface OneButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.One;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const oneButton: OneButton = {
@@ -429,11 +412,8 @@ const oneButton: OneButton = {
 /* One */
 
 /* Two */
-interface TwoButton extends OperatorButton {
-  label: "2";
+interface TwoButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.Two;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const twoButton: TwoButton = {
@@ -445,10 +425,8 @@ const twoButton: TwoButton = {
 /* Two */
 
 /* Three */
-interface ThreeButton extends OperatorButton {
+interface ThreeButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.Three;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const threeButton: ThreeButton = {
@@ -460,10 +438,8 @@ const threeButton: ThreeButton = {
 /* Three */
 
 /* Minus */
-interface MinusButton extends OperatorButton {
+interface MinusButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Minus;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const minusButton: MinusButton = {
@@ -475,10 +451,9 @@ const minusButton: MinusButton = {
 /* Minus */
 
 /* PowerTwo */
-interface PowerTwoButton extends OperatorButton {
+interface PowerTwoButton extends OperatorButton, ButtonTypeParameterAction {
+  label: JSX.Element;
   operator: Operator.PowerTwo;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const powerTwoButton: PowerTwoButton = {
@@ -495,10 +470,8 @@ const powerTwoButton: PowerTwoButton = {
 /* PowerTwo */
 
 /* Exp */
-interface ExpButton extends OperatorButton {
+interface ExpButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Exp;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const expButton: ExpButton = {
@@ -511,10 +484,9 @@ const expButton: ExpButton = {
 /* Exp */
 
 /* Power */
-interface PowerButton extends OperatorButton {
+interface PowerButton extends OperatorButton, ButtonTypeParameterAction {
+  label: JSX.Element;
   operator: Operator.Power;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const powerButton: PowerButton = {
@@ -531,10 +503,8 @@ const powerButton: PowerButton = {
 /* Power */
 
 /* Zero */
-interface ZeroButton extends OperatorButton {
+interface ZeroButton extends OperatorButton, ButtonTypeDigit {
   operator: Operator.Zero;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Digit;
 }
 
 const zeroButton: ZeroButton = {
@@ -546,10 +516,8 @@ const zeroButton: ZeroButton = {
 /* Zero */
 
 /* Dot */
-interface DotButton extends OperatorButton {
+interface DotButton extends OperatorButton, ButtonTypeDot {
   operator: Operator.Dot;
-  appearance: ButtonAppearance.Dark;
-  type: ButtonType.Dot;
 }
 
 const dotButton: DotButton = {
@@ -561,25 +529,21 @@ const dotButton: DotButton = {
 /* Dot */
 
 /* Equal */
-interface EqualButton extends OperatorButton {
+interface EqualButton extends OperatorButton, ButtonTypeNoParameterAction {
   operator: Operator.Equal;
-  appearance: ButtonAppearance.Special;
-  type: ButtonType.NoParameterAction;
 }
 
 const equalButton: EqualButton = {
   label: "=",
   operator: Operator.Equal,
-  appearance: ButtonAppearance.Special,
+  appearance: ButtonAppearance.Light,
   type: ButtonType.NoParameterAction,
 };
 /* Equal */
 
 /* Plus */
-interface PlusButton extends OperatorButton {
+interface PlusButton extends OperatorButton, ButtonTypeParameterAction {
   operator: Operator.Plus;
-  appearance: ButtonAppearance.Light;
-  type: ButtonType.ParameterAction;
 }
 
 const plusButton: PlusButton = {
