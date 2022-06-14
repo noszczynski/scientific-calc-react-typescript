@@ -1,11 +1,13 @@
 [Live demo](http://localhost:3000)
 
 ## Overview
-It is a scientific calculator project based on the Google interface
+It is a scientific calculator project based on the Google interface. 
+App includes full keyboard support and basic a11y accessibility options
 
 TODO
 - e2e tests
 - more opportunities for scientific operations
+- history
 
 The project consists of sub-folders:
 - src
