@@ -2,7 +2,15 @@ import React, { createContext, useCallback, useMemo, useState } from "react";
 import * as _ from "lodash";
 import { Operator } from "../../constants/Operators";
 import { useEvent } from "react-use";
-import { Button, ButtonType, OperatorButton } from "../../constants/buttons";
+import {
+  Button,
+  ButtonType,
+  CurrentValueActionButton,
+  DigitButton,
+  DotButton,
+  NoParameterActionButton,
+  OperatorButton,
+} from "../../constants/buttons";
 
 type Memory = number | null;
 type ActiveOperator = Operator | null;
@@ -192,8 +200,8 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   }, [activeOperator, display, getResultFromAction, memory]);
 
   const executeCalculatorOperation = useCallback(
-    ({ operator }: Button) => {
-      switch (operator) {
+    (button: NoParameterActionButton) => {
+      switch (button.operator) {
         case Operator.Clear: {
           clearCalculations();
           break;
@@ -230,20 +238,6 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           });
           break;
         }
-        case Operator.PI: {
-          setDisplay((state) => {
-            const num = Number(state) * Math.PI;
-            return displayChecker(num.toString()).value;
-          });
-          break;
-        }
-        case Operator.Euler: {
-          setDisplay((state) => {
-            const num = Number(state) * Math.E;
-            return displayChecker(num.toString()).value;
-          });
-          break;
-        }
         case Operator.Factorial: {
           setDisplay((state) => {
             const factorial = (n: number): number => {
@@ -261,7 +255,6 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           break;
         }
         default:
-          console.error(`Unexpected operator: ${operator}`);
           break;
       }
     },
@@ -269,19 +262,19 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   );
 
   const executeDigitOperation = useCallback(
-    ({ operator, type }: Button) => {
-      if (type !== ButtonType.Digit) {
+    (button: DigitButton) => {
+      if (button.type !== ButtonType.Digit) {
         throw Error("Error");
       }
 
-      addToDisplay(operator);
+      addToDisplay(button.operator);
     },
     [addToDisplay]
   );
 
   const executeDotOperation = useCallback(
-    ({ operator, type }: Button) => {
-      if (operator !== Operator.Dot || type !== ButtonType.Dot) {
+    (button: DotButton) => {
+      if (button.operator !== Operator.Dot || button.type !== ButtonType.Dot) {
         throw Error("Error");
       }
 
@@ -293,7 +286,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   );
 
   const executeActionOperation = useCallback(
-    ({ operator }: Button) => {
+    (button: Button) => {
       if (memory !== null) {
         setMemory((state) => {
           if (!activeOperator) {
@@ -302,12 +295,12 @@ export const CalculatorProvider: React.FC = ({ children }) => {
 
           return getResultFromAction(state || 0, activeOperator, display);
         });
-        setActiveOperator(operator);
+        setActiveOperator(button.operator);
         eraseDisplay();
         return;
       }
 
-      setActiveOperator(operator);
+      setActiveOperator(button.operator);
       setDisplay((state) => {
         setMemory(Number(state));
         return displayChecker(DISPLAY_DEFAULT_VALUE).value;
@@ -316,13 +309,22 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     [activeOperator, display, eraseDisplay, getResultFromAction, memory]
   );
 
-  const executeCurrentValueAction = useCallback(({ operator }: Button) => {
-    switch (operator) {
-      default:
-        console.error(`Unexpected operator: ${operator}`);
-        break;
-    }
-  }, []);
+  const executeCurrentValueAction = useCallback(
+    (button: CurrentValueActionButton) => {
+      switch (button.operator) {
+        case Operator.PowerTen:
+          break;
+        case Operator.PI:
+          break;
+        case Operator.Euler:
+          break;
+
+        default:
+          break;
+      }
+    },
+    []
+  );
 
   const clickUIButton = useCallback(
     (button: Button) => {

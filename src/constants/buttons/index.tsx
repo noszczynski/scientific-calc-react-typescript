@@ -516,7 +516,7 @@ const zeroButton: ZeroButton = {
 /* Zero */
 
 /* Dot */
-interface DotButton extends OperatorButton, ButtonTypeDot {
+export interface DotButton extends OperatorButton, ButtonTypeDot {
   operator: Operator.Dot;
 }
 
@@ -554,42 +554,50 @@ const plusButton: PlusButton = {
 };
 /* Plus */
 
-export type Button =
+export type NoParameterActionButton =
   | FactorialButton
-  | PowerTenButton
-  | EulerPowerButton
   | PercentButton
   | DoubleZeroButton
   | BackspaceButton
   | ClearButton
+  | EqualButton;
+
+export type ParameterActionButton =
   | SinusPowButton
   | SinusButton
   | CosinusPowerButton
-  | SevenButton
-  | EightButton
-  | NineButton
   | DivButton
-  | PIButton
   | CosinusButton
   | LogarithmButton
-  | FourButton
-  | FiveButton
-  | SixButton
   | MultiplierButton
-  | EulerButton
   | TangensButton
   | RootButton
-  | OneButton
-  | TwoButton
-  | ThreeButton
   | MinusButton
   | PowerTwoButton
   | ExpButton
   | PowerButton
-  | ZeroButton
-  | DotButton
-  | EqualButton
   | PlusButton;
+
+export type DigitButton =
+  | SevenButton
+  | EightButton
+  | NineButton
+  | FourButton
+  | FiveButton
+  | SixButton
+  | OneButton
+  | TwoButton
+  | ThreeButton
+  | ZeroButton;
+
+export type CurrentValueActionButton = PowerTenButton | PIButton | EulerButton;
+
+export type Button =
+  | DotButton
+  | DigitButton
+  | ParameterActionButton
+  | NoParameterActionButton
+  | CurrentValueActionButton;
 
 export type Buttons = [
   FactorialButton,
