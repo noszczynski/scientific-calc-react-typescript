@@ -1,34 +1,18 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { pxToRem } from "../../helpers";
-import { Operator } from "../../constants/Operators";
 import { useCalculator } from "../../hooks/useCalculator";
+import { ButtonAppearance, ButtonType } from "../../constants/buttons";
+import { Operator } from "../../constants/Operators";
 
-export enum ButtonAppearance {
-  Light,
-  Dark,
-  Special,
-}
-
-export enum ButtonType {
-  Digit = "Digit",
-  Dot = "Dot",
-  CurrentValueAction = "CurrentValueAction",
-  ParameterAction = "ParameterAction",
-  NoParameterAction = "NoParameterAction",
-}
-
-export interface OperatorButton {
+export interface ButtonProps {
+  label: string | JSX.Element;
   operator: Operator;
-  label: string | Operator | JSX.Element;
   appearance: ButtonAppearance;
   type: ButtonType;
-  keyboardKey?: string;
-}
-
-export interface ButtonProps extends Partial<OperatorButton> {
   onClick(): void;
   setRef(ref: HTMLButtonElement | null): void;
+  keyboardKey?: string;
   disabled?: boolean;
 }
 
@@ -37,6 +21,7 @@ const Button: React.FC<ButtonProps> = ({
   label,
   disabled,
   appearance,
+  type,
   operator,
   keyboardKey,
   setRef,
@@ -51,6 +36,7 @@ const Button: React.FC<ButtonProps> = ({
       data-keyboard-key={keyboardKey || label}
       data-label={label}
       data-operator={operator}
+      data-type={type}
       disabled={disabled}
       id={`button-${operator}`}
       onClick={onClick}
@@ -111,6 +97,18 @@ const Container = styled.button<Pick<ButtonProps, "appearance">>`
   &:disabled {
     cursor: not-allowed;
     background-color: #202124;
+  }
+
+  &[data-type="${ButtonType.CurrentValueAction}"] {
+    background-color: blue;
+  }
+
+  &[data-type="${ButtonType.NoParameterAction}"] {
+    background-color: green;
+  }
+
+  &[data-type="${ButtonType.ParameterAction}"] {
+    background-color: #7500a5;
   }
 `;
 

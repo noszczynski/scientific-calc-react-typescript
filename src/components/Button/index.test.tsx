@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react";
-import Button, { ButtonAppearance } from "./index";
+import Button from "./index";
 import { Operator } from "../../constants/Operators";
+import { ButtonAppearance, ButtonType } from "../../constants/buttons";
 
 test("renders learn react link", () => {
   render(
@@ -10,6 +11,7 @@ test("renders learn react link", () => {
       label="Label"
       operator={Operator.Plus}
       setRef={jest.fn}
+      type={ButtonType.Digit}
       onClick={jest.fn}
     />
   );

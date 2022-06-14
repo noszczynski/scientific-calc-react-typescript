@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useMemo, useState } from "react";
 import * as _ from "lodash";
 import { Operator } from "../../constants/Operators";
 import { useEvent } from "react-use";
-import { ButtonType, OperatorButton } from "../../components/Button";
+import { Button, ButtonType, OperatorButton } from "../../constants/buttons";
 
 type Memory = number | null;
 type ActiveOperator = Operator | null;
@@ -100,6 +100,8 @@ export const CalculatorProvider: React.FC = ({ children }) => {
 
   const clearCalculations = useCallback(() => {
     setHistory([]);
+    setActiveOperator(null);
+    setMemory(null);
     eraseDisplay();
   }, [eraseDisplay]);
 
@@ -190,7 +192,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   }, [activeOperator, display, getResultFromAction, memory]);
 
   const executeCalculatorOperation = useCallback(
-    ({ operator }: OperatorButton) => {
+    ({ operator }: Button) => {
       switch (operator) {
         case Operator.Clear: {
           clearCalculations();
@@ -267,7 +269,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   );
 
   const executeDigitOperation = useCallback(
-    ({ operator, type }: OperatorButton) => {
+    ({ operator, type }: Button) => {
       if (type !== ButtonType.Digit) {
         throw Error("Error");
       }
@@ -278,7 +280,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   );
 
   const executeDotOperation = useCallback(
-    ({ operator, type }: OperatorButton) => {
+    ({ operator, type }: Button) => {
       if (operator !== Operator.Dot || type !== ButtonType.Dot) {
         throw Error("Error");
       }
@@ -291,7 +293,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   );
 
   const executeActionOperation = useCallback(
-    ({ operator }: OperatorButton) => {
+    ({ operator }: Button) => {
       if (memory !== null) {
         setMemory((state) => {
           if (!activeOperator) {
@@ -314,19 +316,16 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     [activeOperator, display, eraseDisplay, getResultFromAction, memory]
   );
 
-  const executeCurrentValueAction = useCallback(
-    ({ operator }: OperatorButton) => {
-      switch (operator) {
-        default:
-          console.error(`Unexpected operator: ${operator}`);
-          break;
-      }
-    },
-    []
-  );
+  const executeCurrentValueAction = useCallback(({ operator }: Button) => {
+    switch (operator) {
+      default:
+        console.error(`Unexpected operator: ${operator}`);
+        break;
+    }
+  }, []);
 
   const clickUIButton = useCallback(
-    (button: OperatorButton) => {
+    (button: Button) => {
       switch (button.type) {
         case ButtonType.NoParameterAction: {
           executeCalculatorOperation(button);
@@ -349,7 +348,6 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           break;
         }
         default:
-          console.error(`Unexpected button type: ${button.type}`);
           break;
       }
 
@@ -395,7 +393,8 @@ export const CalculatorProvider: React.FC = ({ children }) => {
             break;
           }
 
-          console.log(`Keyboard click not handled: ${event.key}`);
+          // eslint-disable-next-line no-console
+          console.debug(`Keyboard click not handled: ${event.key}`);
           break;
         }
       }

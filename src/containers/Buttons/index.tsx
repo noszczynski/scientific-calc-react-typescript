@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Button, { OperatorButton } from "../../components/Button";
+import Button from "../../components/Button";
 import styled from "styled-components";
 import { pxToRem } from "../../helpers";
-import buttons from "../../constants/buttons";
+import buttons, { OperatorButton } from "../../constants/buttons";
 import { useCalculator } from "../../hooks/useCalculator";
 
 const Buttons: React.FC = () => {
