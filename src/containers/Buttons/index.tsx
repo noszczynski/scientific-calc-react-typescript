@@ -6,15 +6,15 @@ import buttons from "../../constants/buttons";
 import { useCalculator } from "../../hooks/useCalculator";
 
 const Buttons: React.FC = () => {
-  const { addOperation, saveButtonRefs } = useCalculator();
+  const { clickUIButton, saveButtonRefs } = useCalculator();
 
   const [buttonRefsCache, setButtonRefsCache] = useState<
     (HTMLButtonElement | null)[]
   >([]);
 
   const callback = useCallback(
-    (button: OperatorButton) => () => addOperation(button),
-    [addOperation]
+    (button: OperatorButton) => () => clickUIButton(button),
+    [clickUIButton]
   );
 
   useEffect(() => {

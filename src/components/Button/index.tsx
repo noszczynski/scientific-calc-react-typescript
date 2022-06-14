@@ -13,8 +13,9 @@ export enum ButtonAppearance {
 export enum ButtonType {
   Digit = "Digit",
   Dot = "Dot",
-  Action = "Action",
-  Calculator = "Calculator",
+  CurrentValueAction = "CurrentValueAction",
+  ParameterAction = "ParameterAction",
+  NoParameterAction = "NoParameterAction",
 }
 
 export interface OperatorButton {

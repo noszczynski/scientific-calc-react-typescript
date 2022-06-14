@@ -4,11 +4,6 @@ import { Operator } from "../../constants/Operators";
 import { useEvent } from "react-use";
 import { ButtonType, OperatorButton } from "../../components/Button";
 
-export enum RadianDegrees {
-  Radian = "Rad",
-  Deg = "Deg",
-}
-
 type Memory = number | null;
 type ActiveOperator = Operator | null;
 type DisplayValue = string;
@@ -16,35 +11,24 @@ type History = OperatorButton;
 
 export interface CalculatorProviderReturnProps {
   display: string;
-  currentMode: Mode;
   memory: Memory;
   activeOperator: ActiveOperator;
   history: History[];
   isShiftPressed: boolean;
   isShortcutsShown: boolean;
-  handleSetCurrentMode(mode: Mode): void;
-  addOperation(button: OperatorButton): void;
+  clickUIButton(button: OperatorButton): void;
   saveButtonRefs(refs: HTMLButtonElement[]): void;
-}
-
-export enum Mode {
-  Rad = "Rad",
-  Deg = "Deg",
 }
 
 export const initialProps: CalculatorProviderReturnProps = {
   display: "",
-  currentMode: Mode.Rad,
   memory: null,
   activeOperator: null,
   history: [],
   isShiftPressed: false,
   isShortcutsShown: false,
-  handleSetCurrentMode: () => {
-    throw Error("Function handleSetCurrentMode is used before initialize");
-  },
-  addOperation: () => {
-    throw Error("Function addOperation is used before initialize");
+  clickUIButton: () => {
+    throw Error("Function clickUIButton is used before initialize");
   },
   saveButtonRefs: () => {
     throw Error("Function setRefs is used before initialize");
@@ -90,14 +74,9 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   const [memory, setMemory] = useState<Memory>(null);
   const [activeOperator, setActiveOperator] = useState<ActiveOperator>(null);
   const [history, setHistory] = useState<History[]>([]);
-  const [currentMode, setCurrentMode] = useState<Mode>(Mode.Rad);
   const [isShiftPressed, setIsShiftPressed] = useState<boolean>(false);
   const [isShortcutsShown, setIsShortcutsShown] = useState<boolean>(true);
   const [refs, setRefs] = useState<HTMLButtonElement[]>([]);
-
-  const handleSetCurrentMode = useCallback((mode: Mode) => {
-    setCurrentMode(mode);
-  }, []);
 
   const addToDisplay = useCallback((value: string | number) => {
     setDisplay((state) => {
@@ -130,21 +109,67 @@ export const CalculatorProvider: React.FC = ({ children }) => {
       operator: Operator,
       right?: number | string
     ): number => {
+      const leftArgument = Number(left);
+      const rightArgument = Number(right);
+
       switch (operator) {
         case Operator.Multiplier: {
-          return Number(left) * Number(right);
+          return leftArgument * rightArgument;
         }
         case Operator.Div: {
-          return Number(left) / Number(right);
+          return leftArgument / rightArgument;
         }
         case Operator.Plus: {
-          return Number(left) + Number(right);
+          return leftArgument + rightArgument;
         }
         case Operator.Minus: {
-          return Number(left) - Number(right);
+          return leftArgument - rightArgument;
+        }
+        case Operator.Cosinus: {
+          return leftArgument * Math.cos(rightArgument);
+        }
+        case Operator.Sinus: {
+          return leftArgument * Math.sin(rightArgument);
+        }
+        case Operator.Tangens: {
+          return leftArgument * Math.tan(rightArgument);
+        }
+        case Operator.CosinusPower: {
+          return leftArgument * Math.acos(rightArgument);
+        }
+        case Operator.Exp: {
+          return leftArgument * 10 ** rightArgument;
+        }
+        case Operator.EulerPower: {
+          return leftArgument * Math.E ** rightArgument;
+        }
+        case Operator.PowerTen: {
+          // TODO
+          return 0;
+        }
+        case Operator.SinusPow: {
+          // TODO
+          return 0;
+        }
+        case Operator.Logarithm: {
+          // TODO
+          return 0;
+        }
+        case Operator.Root: {
+          // TODO
+          return 0;
+        }
+        case Operator.PowerTwo: {
+          // TODO
+          return 0;
+        }
+        case Operator.Power: {
+          // TODO
+          return 0;
         }
         default:
-          throw Error("Error");
+          console.error(`Unexpected operator: ${operator}`);
+          return 0;
       }
     },
     []
@@ -165,8 +190,8 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   }, [activeOperator, display, getResultFromAction, memory]);
 
   const executeCalculatorOperation = useCallback(
-    (button: OperatorButton) => {
-      switch (button.operator) {
+    ({ operator }: OperatorButton) => {
+      switch (operator) {
         case Operator.Clear: {
           clearCalculations();
           break;
@@ -203,8 +228,39 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           });
           break;
         }
+        case Operator.PI: {
+          setDisplay((state) => {
+            const num = Number(state) * Math.PI;
+            return displayChecker(num.toString()).value;
+          });
+          break;
+        }
+        case Operator.Euler: {
+          setDisplay((state) => {
+            const num = Number(state) * Math.E;
+            return displayChecker(num.toString()).value;
+          });
+          break;
+        }
+        case Operator.Factorial: {
+          setDisplay((state) => {
+            const factorial = (n: number): number => {
+              if (n < 0) return -1;
+              else if (n == 0) return 1;
+              else {
+                return n * factorial(n - 1);
+              }
+            };
+
+            const num = factorial(Number(state));
+
+            return displayChecker(num.toString()).value;
+          });
+          break;
+        }
         default:
-          throw Error("Error");
+          console.error(`Unexpected operator: ${operator}`);
+          break;
       }
     },
     [addToDisplay, clearCalculations, equal]
@@ -236,43 +292,43 @@ export const CalculatorProvider: React.FC = ({ children }) => {
 
   const executeActionOperation = useCallback(
     ({ operator }: OperatorButton) => {
-      switch (operator) {
-        case Operator.Multiplier:
-        case Operator.Div:
-        case Operator.Plus:
-        case Operator.Minus: {
-          if (memory !== null) {
-            setMemory((state) => {
-              if (!activeOperator) {
-                throw Error("No activeOperator");
-              }
-
-              return getResultFromAction(state || 0, activeOperator, display);
-            });
-            setActiveOperator(operator);
-            eraseDisplay();
-            break;
+      if (memory !== null) {
+        setMemory((state) => {
+          if (!activeOperator) {
+            throw Error("No activeOperator");
           }
 
-          setActiveOperator(operator);
-          setDisplay((state) => {
-            setMemory(Number(state));
-            return displayChecker(DISPLAY_DEFAULT_VALUE).value;
-          });
-
-          break;
-        }
-        default:
-          throw Error("Error");
+          return getResultFromAction(state || 0, activeOperator, display);
+        });
+        setActiveOperator(operator);
+        eraseDisplay();
+        return;
       }
+
+      setActiveOperator(operator);
+      setDisplay((state) => {
+        setMemory(Number(state));
+        return displayChecker(DISPLAY_DEFAULT_VALUE).value;
+      });
     },
     [activeOperator, display, eraseDisplay, getResultFromAction, memory]
+  );
+
+  const executeCurrentValueAction = useCallback(
+    ({ operator }: OperatorButton) => {
+      switch (operator) {
+        default:
+          console.error(`Unexpected operator: ${operator}`);
+          break;
+      }
+    },
+    []
   );
 
   const clickUIButton = useCallback(
     (button: OperatorButton) => {
       switch (button.type) {
-        case ButtonType.Calculator: {
+        case ButtonType.NoParameterAction: {
           executeCalculatorOperation(button);
           break;
         }
@@ -284,12 +340,17 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           executeDotOperation(button);
           break;
         }
-        case ButtonType.Action: {
+        case ButtonType.ParameterAction: {
           executeActionOperation(button);
           break;
         }
+        case ButtonType.CurrentValueAction: {
+          executeCurrentValueAction(button);
+          break;
+        }
         default:
-          throw Error(`Unexpected button type: ${button.type}`);
+          console.error(`Unexpected button type: ${button.type}`);
+          break;
       }
 
       setHistory((state: History[]) => {
@@ -302,6 +363,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     [
       executeActionOperation,
       executeCalculatorOperation,
+      executeCurrentValueAction,
       executeDigitOperation,
       executeDotOperation,
     ]
@@ -366,9 +428,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   const value: CalculatorProviderReturnProps = useMemo(
     () => ({
       display,
-      addOperation: clickUIButton,
-      currentMode,
-      handleSetCurrentMode,
+      clickUIButton,
       memory,
       activeOperator,
       history,
@@ -380,8 +440,6 @@ export const CalculatorProvider: React.FC = ({ children }) => {
       history,
       display,
       clickUIButton,
-      currentMode,
-      handleSetCurrentMode,
       memory,
       activeOperator,
       isShiftPressed,
