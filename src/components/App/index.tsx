@@ -22,10 +22,10 @@ const Wrapper = styled.div`
   row-gap: ${pxToRem(8)};
 `;
 
-const Debug = styled.pre`
-  height: calc(100vh - 370px);
-  width: 100%;
-  overflow-y: auto;
-`;
+// const Debug = styled.pre`
+//   height: calc(100vh - 370px);
+//   width: 100%;
+//   overflow-y: auto;
+// `;
 
 export default App;
