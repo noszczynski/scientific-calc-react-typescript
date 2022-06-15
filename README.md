@@ -1,4 +1,4 @@
-[Live demo](http://localhost:3000)
+[Live demo](https://unrivaled-cajeta-2e8dd4.netlify.app)
 
 ## Overview
 It is a scientific calculator project based on the Google interface. 
