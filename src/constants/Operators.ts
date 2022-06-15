@@ -24,7 +24,7 @@ export enum Operator {
   Two = "2",
   Three = "3",
   Minus = "-",
-  Exp = "Exp",
+  Negative = "Negative",
   Power = "pow",
   PowerTen = "pow10",
   PowerTwo = "pow2",

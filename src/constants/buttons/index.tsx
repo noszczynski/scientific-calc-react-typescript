@@ -27,7 +27,7 @@ const Y = styled.span.attrs({ children: "Y" })`
 
 export interface OperatorButton {
   label: JSX.Element;
-  keyboardKey?: string;
+  keyboardKey: string;
 }
 
 export interface ButtonAppearanceLight {
@@ -98,7 +98,7 @@ const powerTenButton: PowerTenButton = {
 /* PowerTen */
 
 /* EulerPower */
-interface EulerPowerButton extends OperatorButton, ButtonTypeOneParameter {
+interface EulerPowerButton extends OperatorButton, ButtonTypeTwoParameters {
   operator: Operator.EulerPower;
 }
 
@@ -113,7 +113,7 @@ const eulerPowerButton: EulerPowerButton = {
   ),
   operator: Operator.EulerPower,
   appearance: ButtonAppearance.Light,
-  type: ButtonType.OneParameter,
+  type: ButtonType.TwoParameters,
   keyboardKey: "w",
 };
 /* EulerPower */
@@ -128,6 +128,7 @@ const percentButton: PercentButton = {
   operator: Operator.Percent,
   appearance: ButtonAppearance.Light,
   type: ButtonType.ZeroParameter,
+  keyboardKey: "%",
 };
 /* Percent */
 
@@ -241,6 +242,7 @@ const sevenButton: SevenButton = {
   operator: Operator.Seven,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "7",
 };
 /* Seven */
 
@@ -254,6 +256,7 @@ const eightButton: EightButton = {
   operator: Operator.Eight,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "8",
 };
 /* Eight */
 
@@ -267,6 +270,7 @@ const nineButton: NineButton = {
   operator: Operator.Nine,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "9",
 };
 /* Nine */
 
@@ -354,6 +358,7 @@ const fourButton: FourButton = {
   operator: Operator.Four,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "4",
 };
 /* Four */
 
@@ -367,6 +372,7 @@ const fiveButton: FiveButton = {
   operator: Operator.Five,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "5",
 };
 /* Five */
 
@@ -380,6 +386,7 @@ const sixButton: SixButton = {
   operator: Operator.Six,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "6",
 };
 /* Six */
 
@@ -463,6 +470,7 @@ const oneButton: OneButton = {
   operator: Operator.One,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "1",
 };
 /* One */
 
@@ -476,6 +484,7 @@ const twoButton: TwoButton = {
   operator: Operator.Two,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "2",
 };
 /* Two */
 
@@ -489,6 +498,7 @@ const threeButton: ThreeButton = {
   operator: Operator.Three,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "3",
 };
 /* Three */
 
@@ -502,6 +512,7 @@ const minusButton: MinusButton = {
   operator: Operator.Minus,
   appearance: ButtonAppearance.Light,
   type: ButtonType.TwoParameters,
+  keyboardKey: "-",
 };
 /* Minus */
 
@@ -526,15 +537,19 @@ const powerTwoButton: PowerTwoButton = {
 
 /* Exp */
 interface ExpButton extends OperatorButton, ButtonTypeZeroParameter {
-  operator: Operator.Exp;
+  operator: Operator.Negative;
 }
 
 const expButton: ExpButton = {
-  label: <span>EXP</span>,
-  operator: Operator.Exp,
+  label: (
+    <span>
+      -<X />
+    </span>
+  ),
+  operator: Operator.Negative,
   appearance: ButtonAppearance.Light,
   type: ButtonType.ZeroParameter,
-  keyboardKey: "v",
+  keyboardKey: "_",
 };
 /* Exp */
 
@@ -569,6 +584,7 @@ const zeroButton: ZeroButton = {
   operator: Operator.Zero,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Digit,
+  keyboardKey: "0",
 };
 /* Zero */
 
@@ -582,6 +598,7 @@ const dotButton: DotButton = {
   operator: Operator.Dot,
   appearance: ButtonAppearance.Dark,
   type: ButtonType.Dot,
+  keyboardKey: ".",
 };
 /* Dot */
 
@@ -595,6 +612,7 @@ const equalButton: EqualButton = {
   operator: Operator.Equal,
   appearance: ButtonAppearance.Light,
   type: ButtonType.ZeroParameter,
+  keyboardKey: "=",
 };
 /* Equal */
 
@@ -608,6 +626,7 @@ const plusButton: PlusButton = {
   operator: Operator.Plus,
   appearance: ButtonAppearance.Light,
   type: ButtonType.TwoParameters,
+  keyboardKey: "+",
 };
 /* Plus */
 
@@ -624,7 +643,6 @@ export type OneParameterButton =
   | PowerTenButton
   | PIButton
   | EulerButton
-  | EulerPowerButton
   | PowerTwoButton;
 
 export type TwoParametersButton =
@@ -639,7 +657,8 @@ export type TwoParametersButton =
   | RootButton
   | MinusButton
   | PowerButton
-  | PlusButton;
+  | PlusButton
+  | EulerPowerButton;
 
 export type DigitButton =
   | SevenButton

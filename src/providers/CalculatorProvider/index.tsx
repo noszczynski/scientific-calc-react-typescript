@@ -167,9 +167,6 @@ export const CalculatorProvider: React.FC = ({ children }) => {
         case Operator.CosinusPower: {
           return leftArgument * Math.acos(rightArgument);
         }
-        case Operator.Exp: {
-          return leftArgument * 10 ** rightArgument;
-        }
         case Operator.EulerPower: {
           return leftArgument * Math.E ** rightArgument;
         }
@@ -190,6 +187,9 @@ export const CalculatorProvider: React.FC = ({ children }) => {
         }
         case Operator.Root: {
           return leftArgument * Math.sqrt(rightArgument);
+        }
+        case Operator.Power: {
+          return leftArgument ** rightArgument;
         }
         default:
           console.error(`Unexpected operator: ${operator}`);
@@ -252,6 +252,13 @@ export const CalculatorProvider: React.FC = ({ children }) => {
         case Operator.Percent: {
           setDisplay((state) => {
             const num = Number(state) / 100;
+            return displayChecker(num.toString()).value;
+          });
+          break;
+        }
+        case Operator.Negative: {
+          setDisplay((state) => {
+            const num = Number(state) * -1;
             return displayChecker(num.toString()).value;
           });
           break;
@@ -343,13 +350,6 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           );
           break;
         case Operator.Euler:
-          setDisplay(
-            displayChecker(
-              getResultFromAction(display, button.operator).toString()
-            ).value
-          );
-          break;
-        case Operator.EulerPower:
           setDisplay(
             displayChecker(
               getResultFromAction(display, button.operator).toString()
