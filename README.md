@@ -4,10 +4,13 @@
 It is a scientific calculator project based on the Google interface. 
 App includes full keyboard support and basic a11y accessibility options
 
+You can click "h" to help
+
 TODO
 - e2e tests
 - more opportunities for scientific operations
 - history
+- bugfixes
 
 The project consists of sub-folders:
 - src
