@@ -2,25 +2,24 @@ import React from "react";
 import styled from "styled-components";
 import { pxToRem } from "../../helpers";
 import { useCalculator } from "../../hooks/useCalculator";
+import { X_COLOR, Y_COLOR } from "../../constants/buttons";
 
-type DisplayProps = {
-  //
-};
-
-const Display: React.FC<DisplayProps> = () => {
+const Display: React.FC = () => {
   const { display, memory, activeOperator } = useCalculator();
 
   return (
     <Container>
       <Bar>
         <span />
-        <span>{memory ?? ""}</span>
+        <span style={{ color: X_COLOR }}>{memory ?? ""}</span>
       </Bar>
       <Bar>
         <span />
-        <span>{activeOperator}</span>
+        <span>{activeOperator?.display}</span>
       </Bar>
-      <Value data-cy="display">{display}</Value>
+      <Value data-cy="display" style={{ color: memory ? Y_COLOR : X_COLOR }}>
+        {display}
+      </Value>
     </Container>
   );
 };

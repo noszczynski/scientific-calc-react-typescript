@@ -99,16 +99,16 @@ const Container = styled.button<Pick<ButtonProps, "appearance">>`
     background-color: #202124;
   }
 
-  &[data-type="${ButtonType.CurrentValueAction}"] {
-    background-color: blue;
+  &[data-type="${ButtonType.OneParameter}"] {
+    outline: 1px solid blue;
   }
 
-  &[data-type="${ButtonType.NoParameterAction}"] {
-    background-color: green;
+  &[data-type="${ButtonType.ZeroParameter}"] {
+    outline: 1px solid green;
   }
 
-  &[data-type="${ButtonType.ParameterAction}"] {
-    background-color: #7500a5;
+  &[data-type="${ButtonType.TwoParameters}"] {
+    outline: 1px solid #7500a5;
   }
 `;
 
