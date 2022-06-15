@@ -99,6 +99,7 @@ const Container = styled.button<Pick<ButtonProps, "appearance">>`
     background-color: #202124;
   }
 
+  /* debug
   &[data-type="${ButtonType.OneParameter}"] {
     outline: 1px solid blue;
   }
@@ -110,6 +111,7 @@ const Container = styled.button<Pick<ButtonProps, "appearance">>`
   &[data-type="${ButtonType.TwoParameters}"] {
     outline: 1px solid #7500a5;
   }
+   */
 `;
 
 const Shortcut = styled.span`

@@ -100,9 +100,8 @@ export const CalculatorProvider: React.FC = ({ children }) => {
   const [activeOperator, setActiveOperator] = useState<ActiveOperator>(null);
   const [history, setHistory] = useState<History[]>([]);
   const [isShiftPressed, setIsShiftPressed] = useState<boolean>(false);
-  const [isShortcutsShown, setIsShortcutsShown] = useState<boolean>(true);
+  const [isShortcutsShown, setIsShortcutsShown] = useState<boolean>(false);
   const [refs, setRefs] = useState<HTMLButtonElement[]>([]);
-  const [error, setError] = useState<boolean>(false);
 
   const addToDisplay = useCallback((value: string | number) => {
     setDisplay((state) => {
@@ -448,7 +447,7 @@ export const CalculatorProvider: React.FC = ({ children }) => {
           break;
         }
         case "h": {
-          setIsShortcutsShown(true);
+          setIsShortcutsShown((state) => !state);
           break;
         }
         default: {
@@ -475,10 +474,6 @@ export const CalculatorProvider: React.FC = ({ children }) => {
     switch (event.key) {
       case "Shift": {
         setIsShiftPressed(false);
-        break;
-      }
-      case "h": {
-        setIsShortcutsShown(false);
         break;
       }
       default:

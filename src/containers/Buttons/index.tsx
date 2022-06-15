@@ -43,7 +43,7 @@ const Buttons: React.FC = () => {
           />
         ))}
       </Container>
-      <Hint>Press and hold &quot;h&quot; to show help</Hint>
+      <Hint>Press &quot;h&quot; to toggle help</Hint>
     </Wrapper>
   );
 };

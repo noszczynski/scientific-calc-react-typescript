@@ -2,16 +2,15 @@ import styled from "styled-components";
 import Buttons from "../../containers/Buttons";
 import Display from "../../containers/Display";
 import { pxToRem } from "../../helpers";
-import { useCalculator } from "../../hooks/useCalculator";
 
 const App = () => {
-  const calculator = useCalculator();
+  // const calculator = useCalculator();
 
   return (
     <Wrapper>
       <Display />
       <Buttons />
-      <Debug lang="json">{JSON.stringify(calculator, null, 4)}</Debug>
+      {/*<Debug lang="json">{JSON.stringify(calculator, null, 4)}</Debug>*/}
     </Wrapper>
   );
 };
